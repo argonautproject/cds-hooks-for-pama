@@ -28,8 +28,9 @@ Argonaut PAMA extensions at the top level of the response to communicate:
 
 | Field | Optionality | Type | Description |
 | --- | ---- |  ---- |  ---- | 
-| `cdsSessionId` | REQUIRED |  *identifier* | correlation handle that can be used for audit logging |
+| `cdsSessionId` | REQUIRED |  *uri* | correlation handle that can be used for audit logging |
 | `qcdsmConsulted` | REQUIRED | *url* |  canonical `url` representing the Qualified CDS Mechanism that was consulted |
+| `aucNotApplicableReason` | REQUIRED | *string* | short description on why AUC didn't apply.|
 | `aucNotApplicable` | REQUIRED | *CodeableConcept* |  list of identifiers conveying which AUCs were considered but deemed not to apply to this patient or scenario. For example, a qCDSM that implements the criteria from the American College of Radiology might return {"system": "https://acsearch.acr.org", "value": "1.0.0"} to indicate that these AUCs did not apply for the patient's diagnosis. |
 
 Argonaut PAMA extensions within each **card** to communicate:
@@ -112,6 +113,78 @@ Example request:
             }
         }
     } Need to add Prefetch!
+
+Example response when "no criteria apply":
+
+    {
+        "extension": {
+            "http://fhir.org/guides/argonaut/pama-v1.0.0/context": {
+                "cdsSessionId": "urn:uuid:53fefa32-fcbb-4ff8-8a92-55ee120877b7",
+                "qcdsmConsulted": "http://example-cds-service.fhir.org/qualified-cds/provider",
+                "aucNotApplicableReason": "No criteria apply for a diagnosis of jaw pain",
+                "aucNotApplicable": [
+                    {
+                        "system": "https://acsearch.acr.org",
+                        "code": "1.0.0"
+                    }
+                ]
+            }
+        },
+        "cards": []
+    }
+
+Example response when criteria do apply:
+
+    {
+        "extension": {
+            "http://fhir.org/guides/argonaut/pama-v1.0.0/context": {
+                "cdsSessionId": "urn:uuid:53fefa32-fcbb-4ff8-8a92-55ee120877b7",
+                "qcdsmConsulted": "http://example-cds-service.fhir.org/qualified-cds/provider"
+            }
+        },
+        "cards": [
+            {
+                "summary": "Example Card",
+                "indicator": "info",
+                "detail": "This is an example card.",
+                "source": {
+                    "label": "Static CDS Service Example",
+                    "url": "https://example.com",
+                    "icon": "https://example.com/img/icon-100px.png"
+                },
+                "extension": {
+                    "http://fhir.org/guides/argonaut/pama-v1.0.0/score-detail": {
+                        "aucApplied": [
+                            {
+                                "system": "https://acsearch.acr.or",
+                                "value": "70910548971"
+                            }
+                        ],
+                        "appropriatenessRatingscore": {
+                            "coding": [
+                                {
+                                    "system": "http://fhir.org/guides/argonaut/appropriatenessRatingscore",
+                                    "code": "May-Be-Appropriate"
+                                }
+                            ],
+                            "text": "May Be Appropriatee"
+                        }
+                    }
+                },
+                "links": [
+                    {
+                        "label": "ACR Guidelines to review",
+                        "url": "https://acsearch.acr.org/docs/70910/Narrative/",
+                        "type": "absolute"
+                    }
+                ]
+            },
+            {
+                "summary": "Another card",
+                "indicator": "warning"
+            }
+        ]
+    }
 
 
 
