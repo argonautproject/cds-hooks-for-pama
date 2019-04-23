@@ -114,6 +114,8 @@ Example request:
         }
     } Need to add Prefetch!
 
+### CDS Service Responses
+
 Example response when "no criteria apply":
 
     {
