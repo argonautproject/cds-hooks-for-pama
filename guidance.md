@@ -28,18 +28,17 @@ Argonaut PAMA extensions at the top level of the response to communicate:
 
 | Field | Optionality | Type | Description |
 | --- | ---- |  ---- |  ---- | 
-| `cdsSessionId` | REQUIRED |  *uri* | correlation handle that can be used for audit logging |
-| `qcdsmConsulted` | REQUIRED | *url* |  canonical `url` representing the Qualified CDS Mechanism that was consulted |
-| `aucNotApplicableReason` | REQUIRED | *string* | short description on why AUC didn't apply.|
-| `aucNotApplicable` | REQUIRED | *CodeableConcept* |  list of identifiers conveying which AUCs were considered but deemed not to apply to this patient or scenario. For example, a qCDSM that implements the criteria from the American College of Radiology might return {"system": "https://acsearch.acr.org", "value": "1.0.0"} to indicate that these AUCs did not apply for the patient's diagnosis. |
+| `qcdsmConsulted` | REQUIRED | *url* |  canonical `url` representing the Qualified CDS Mechanism that was consulted. (Note: In future this may be a CMS assigned GCODE to identify service) |
 
 Argonaut PAMA extensions within each **card** to communicate:
 
 | Field | Optionality | Type | Description |
 | ----- | -------- | ---- | ---- |
-`aucApplied` | REQUIRED |  *identifier* | identifier for the AUC considered in this card
-`appropriatenessRatingscore` | REQUIRED | *CodeableConcept* | 'Usually Appropriate'; 'May Be Appropriate'; 'Usually Not Appropriate'; may include concept of 'No Score Available'?
-`description` | REQUIRED | *string* | Required if appropriatenessRatingscore = 'No Score Available'?) 
+| `consultId` | REQUIRED |  *uri* | correlation handle that can be used for audit logging |
+| `aucApplied` | REQUIRED |  *identifier* | identifier for the AUC considered in this card
+| `appropriatenessRatingscore` | REQUIRED | *CodeableConcept* | 'Usually Appropriate'; 'May Be Appropriate'; 'Usually Not Appropriate'; 'Not Applicable'
+| `aucNotApplicableReason` | OPTIONAL | *string* | short description on why AUC didn't apply.|
+
 
 The CDS service response **MAY** provide:
 
