@@ -28,16 +28,17 @@ Argonaut PAMA extensions at the top level of the response to communicate:
 
 | Field | Optionality | Type | Description |
 | --- | ---- |  ---- |  ---- | 
-| `qcdsmConsulted` | REQUIRED | *url* |  canonical `url` representing the Qualified CDS Mechanism that was consulted. (Note: In future this may be a CMS assigned GCODE to identify service) |
+| `pama-rating-auto-apply` | REQUIRED | *boolean* |  indicator to the requesting client to auto apply the score |
 
-Argonaut PAMA extensions within each **card** to communicate:
+Argonaut PAMA extensions within each **ServiceRequest** resource to communicate:
 
 | Field | Optionality | Type | Description |
 | ----- | -------- | ---- | ---- |
-| `consultId` | REQUIRED |  *uri* | correlation handle that can be used for audit logging |
-| `aucApplied` | REQUIRED |  *identifier* | identifier for the AUC considered in this card
-| `appropriatenessRatingscore` | REQUIRED | *CodeableConcept* | 'Usually Appropriate'; 'May Be Appropriate'; 'Usually Not Appropriate'; 'Not Applicable'
-| `aucNotApplicableReason` | OPTIONAL | *string* | short description on why AUC didn't apply.|
+| `pama-rating` | REQUIRED | *CodeableConcept* | 'Usually Appropriate'; 'May Be Appropriate'; 'Usually Not Appropriate'; 'Not Applicable'
+| `pama-rating-qcdsm-consulted` | REQUIRED |  *uri* | canonical `url` representing the Qualified CDS Mechanism that was consulted. (Note: In future this may be a CMS assigned GCODE to identify service)correlation handle that can be used for audit logging |
+| `pama-rating-auc-applied` | REQUIRED |  *identifier* | identifier for the AUC applied
+| `pama-rating-consult-id` | REQUIRED | *uri* | correlation handle that can be used for audit logging
+
 
 
 The CDS service response **MAY** provide:
@@ -115,78 +116,151 @@ Example request:
 
 ### CDS Service Responses
 
-Example response when "no criteria apply":
+Example response when AUC "Not Applicable":
 
-    {
-        "extension": {
-            "http://fhir.org/guides/argonaut/pama-v1.0.0/context": {
-                "cdsSessionId": "urn:uuid:53fefa32-fcbb-4ff8-8a92-55ee120877b7",
-                "qcdsmConsulted": "http://example-cds-service.fhir.org/qualified-cds/provider",
-                "aucNotApplicableReason": "No criteria apply for a diagnosis of jaw pain",
-                "aucNotApplicable": [
-                    {
-                        "system": "https://acsearch.acr.org",
-                        "code": "1.0.0"
+   ```json
+{
+"cards": [
+{
+    "suggestions": [
+        {
+            "extension": {"http://fhir.org/argonaut/pama-rating-auto-apply": true},
+            "actions": [
+                {
+                    "type": "update",
+                    "resource": {
+                        "resourceType": "ServiceRequest",
+                        "id": "Example-MRI-Request",
+                        "extension": [
+                            {
+                                "url": "http://fhir.org/argonaut/StructureDefinition/pama-rating",
+                                "valueCodeableConcept": {
+                                    "coding": [
+                                        {
+                                            "system": "http://fhir.org/argonaut/CodeSystem/pama-rating",
+                                            "code": "not-applicable"
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                "url": "http://fhir.org/argonaut/StructureDefinition/pama-rating-qcdsm-consulted",
+                                "valueUri": "http://example-cds-service.fhir.org/qualified-cds/provider"
+                            },
+                            {
+                                "url": "http://fhir.org/argonaut/StructureDefinition/pama-rating-auc-applied",
+                                "valueUri": "https://acsearch.acr.org/70910548971"
+                            },
+                            {
+                                "url": "http://fhir.org/argonaut/StructureDefinition/pama-rating-consult-id",
+                                "valueUri": "urn:uuid:55f3b7fc-9955-420e-a460-ff284b2956e6"
+                            }
+                        ],
+                        "status": "draft",
+                        "intent": "plan",
+                        "code": {
+                            "coding": [
+                                {
+                                    "system": "http://loinc.org",
+                                    "code": "36801-9"
+                                }
+                            ],
+                            "text": "MRA Knee Vessels Right"
+                        },
+                        "subject": {"reference": "Patient/MRI-59879846"},
+                        "reasonCode": [
+                            {
+                                "coding": [
+                                    {
+                                        "system": "http://hl7.org/fhir/sid/icd-10",
+                                        "code": "S83.511",
+                                        "display": "Sprain of anterior cruciate ligament of right knee"
+                                    }
+                                ]
+                            }
+                        ]
                     }
-                ]
-            }
-        },
-        "cards": []
-    }
+                }
+            ]
+        }
+    ]
+}
+]
+}
+```
 
 Example response when criteria do apply:
 
+```json
+{
+"cards": [
     {
-        "extension": {
-            "http://fhir.org/guides/argonaut/pama-v1.0.0/context": {
-                "cdsSessionId": "urn:uuid:53fefa32-fcbb-4ff8-8a92-55ee120877b7",
-                "qcdsmConsulted": "http://example-cds-service.fhir.org/qualified-cds/provider"
-            }
-        },
-        "cards": [
+        "suggestions": [
             {
-                "summary": "Example Card",
-                "indicator": "info",
-                "detail": "This is an example card.",
-                "source": {
-                    "label": "Static CDS Service Example",
-                    "url": "https://example.com",
-                    "icon": "https://example.com/img/icon-100px.png"
-                },
-                "extension": {
-                    "http://fhir.org/guides/argonaut/pama-v1.0.0/score-detail": {
-                        "aucApplied": [
-                            {
-                                "system": "https://acsearch.acr.or",
-                                "value": "70910548971"
-                            }
-                        ],
-                        "appropriatenessRatingscore": {
-                            "coding": [
+                "extension": {"http://fhir.org/argonaut/pama-rating-auto-apply": true},
+                "actions": [
+                    {
+                        "type": "update",
+                        "resource": {
+                            "resourceType": "ServiceRequest",
+                            "id": "Example-MRI-Request",
+                            "extension": [
                                 {
-                                    "system": "http://fhir.org/guides/argonaut/appropriatenessRatingscore",
-                                    "code": "May-Be-Appropriate"
+                                    "url": "http://fhir.org/argonaut/StructureDefinition/pama-rating",
+                                    "valueCodeableConcept": {
+                                        "coding": [
+                                            {
+                                                "system": "http://fhir.org/argonaut/CodeSystem/pama-rating",
+                                                "code": "appropriate"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "url": "http://fhir.org/argonaut/StructureDefinition/pama-rating-qcdsm-consulted",
+                                    "valueUri": "http://example-cds-service.fhir.org/qualified-cds/provider"
+                                },
+                                {
+                                    "url": "http://fhir.org/argonaut/StructureDefinition/pama-rating-auc-applied",
+                                    "valueUri": "https://acsearch.acr.org/70910548971"
+                                },
+                                {
+                                    "url": "http://fhir.org/argonaut/StructureDefinition/pama-rating-consult-id",
+                                    "valueUri": "urn:uuid:55f3b7fc-9955-420e-a460-ff284b2956e6"
                                 }
                             ],
-                            "text": "May Be Appropriatee"
+                            "status": "draft",
+                            "intent": "plan",
+                            "code": {
+                                "coding": [
+                                    {
+                                        "system": "http://loinc.org",
+                                        "code": "36801-9"
+                                    }
+                                ],
+                                "text": "MRA Knee Vessels Right"
+                            },
+                            "subject": {"reference": "Patient/MRI-59879846"},
+                            "reasonCode": [
+                                {
+                                    "coding": [
+                                        {
+                                            "system": "http://hl7.org/fhir/sid/icd-10",
+                                            "code": "S83.511",
+                                            "display": "Sprain of anterior cruciate ligament of right knee"
+                                        }
+                                    ]
+                                }
+                            ]
                         }
                     }
-                },
-                "links": [
-                    {
-                        "label": "ACR Guidelines to review",
-                        "url": "https://acsearch.acr.org/docs/70910/Narrative/",
-                        "type": "absolute"
-                    }
                 ]
-            },
-            {
-                "summary": "Another card",
-                "indicator": "warning"
             }
         ]
     }
-
+]
+}
+```
 
 
 ### Steps to add once Web Messaging spec is ready
