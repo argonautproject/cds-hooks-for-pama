@@ -33,17 +33,15 @@ For each PAMA-relevant ServiceRequest, the CDS Service MUST provide a PAMA Respo
 
 The CDS Service produces a PAMA Response for each PAMA-relevant ServiceRequest by:
 
-1. Creating a _suggestion_ card with the `pama-rating-auto-apply` extension set to `true`, which indicate that this
-   card does not make any semantic change to the ServiceRequest, but only attaches a set of appropriateness rating extensions.
-2. Optionally creating a set of proposed alternatively orders, as _suggestion_ cards that do *not*
-   include an auto-apply value of `true`.
+1. Creating an `actions` list as a root-level extension (see extension details below).
+2. Optionally creating a set of proposed alternatively orders, as _suggestion_ cards
 3. Optionally creating a set of _app link_ cards to launch external apps to capture additional data (e.g. prior diagnostic work completed, previous procedures performed, information from review of systems) or provide advice
 
 Argonaut CDS Hooks extension for PAMA, to be used at the top level of a `suggestions` entry:
 
 | Field | Optionality | Type | Description |
 | --- | ---- |  ---- |  ---- | 
-| `pama-rating-auto-apply` | OPTIONAL | *boolean* |  indicator to the requesting client to auto apply the score, rather than presenting it for a user to manually accept. This MUST NOT be set to true if the suggestion makes any changes beyond applying a PAMA response.|
+| `actions` | OPTIONAL | *array* |  An array of `action` elements, following the same schema as the actions of a _suggestion card_. Each action muse use `type: "update"` to update a single ServiceRequest; the update MUST NOT make any semantic change to the ServiceRequest, but may attach appropriateness rating extensions.|
 
 
 Argonaut FHIR extensions for PAMA, within each **ServiceRequest** resource to communicate:
@@ -60,7 +58,7 @@ Argonaut FHIR extensions for PAMA, within each **ServiceRequest** resource to co
 
 A CDS client, or EHR, **SHALL** support the following behaviors to process a PAMA Response:
 
-- Automatically incorporate appropriateness ratings from any _suggestion cards_ where the auto-apply flag is set to `true`
+- Automatically incorporate appropriateness ratings from any actions in the top-level `extension.actions` array
 - Communicate any automatically-incorporated appropriateness ratings to the user
 - Store any automatically-incorporated appropriatness ratings and make them available for subsequent reporting
 - Display any _suggestion_ cards that convey valid alternative orders
@@ -75,52 +73,44 @@ Example request:
 
 ```
 {
-  "hookInstance":"d1577c69-dfbe-44ad-ba6d-3e05e953b2ea",
-  "fhirServer":"http://hooks.smarthealthit.org:9080",
-  "context":{
-    "userId":"Practitioner/123",
-    "patientId":"MRI-59879846",
-    "encounterId":"89284",
-    "selections":[
-      "ServiceRequest/example-MRI-59879846"
-    ],
-    "draftOrders":{
-      "resourceType":"Bundle",
-      "entry":[
-        {
-          "resource":{
-            "resourceType":"ServiceRequest",
-            "id":"Example-MRI-Request",
-            "status":"draft",
-            "intent":"plan",
-            "code":{
-              "coding":[
-                {
-                  "system":"http://loinc.org",
-                  "code":"36801-9"
+    "hookInstance": "d1577c69-dfbe-44ad-ba6d-3e05e953b2ea",
+    "fhirServer": "http://hooks.smarthealthit.org:9080",
+    "context": {
+        "userId": "Practitioner/123",
+        "patientId": "MRI-59879846",
+        "encounterId": "89284",
+        "selections": [
+            "ServiceRequest/example-MRI-59879846"
+        ],
+        "draftOrders": {
+            "resourceType": "Bundle",
+            "entry": [{
+                "resource": {
+                    "resourceType": "ServiceRequest",
+                    "id": "Example-MRI-Request",
+                    "status": "draft",
+                    "intent": "plan",
+                    "code": {
+                        "coding": [{
+                            "system": "http://loinc.org",
+                            "code": "36801-9"
+                        }],
+                        "text": "MRA Knee Vessels Right"
+                    },
+                    "subject": {
+                        "reference": "Patient/MRI-59879846"
+                    },
+                    "reasonCode": [{
+                        "coding": [{
+                            "system": "http://hl7.org/fhir/sid/icd-10",
+                            "code": "S83.511",
+                            "display": "Sprain of anterior cruciate ligament of right knee"
+                        }]
+                    }]
                 }
-              ],
-              "text":"MRA Knee Vessels Right"
-            },
-            "subject":{
-              "reference":"Patient/MRI-59879846"
-            },
-            "reasonCode":[
-              {
-                "coding":[
-                  {
-                    "system":"http://hl7.org/fhir/sid/icd-10",
-                    "code":"S83.511",
-                    "display":"Sprain of anterior cruciate ligament of right knee"
-                  }
-                ]
-              }
-            ]
-          }
+            }]
         }
-      ]
     }
-  }
 }
 ```
 
@@ -132,76 +122,57 @@ Example response when AUC "Not Applicable":
 
 ```json
 {
-  "cards":[
-    {
-      "suggestions":[
-        {
-          "extension":{
-            "http://fhir.org/argonaut/pama-rating-auto-apply":true
-          },
-          "actions":[
-            {
-              "type":"update",
-              "resource":{
-                "resourceType":"ServiceRequest",
-                "id":"Example-MRI-Request",
-                "extension":[
-                  {
-                    "url":"http://fhir.org/argonaut/StructureDefinition/pama-rating",
-                    "valueCodeableConcept":{
-                      "coding":[
-                        {
-                          "system":"http://fhir.org/argonaut/CodeSystem/pama-rating",
-                          "code":"not-applicable"
+    "cards": [],
+    "extension": {
+        "actions": [{
+            "type": "update",
+            "resource": {
+                "resourceType": "ServiceRequest",
+                "id": "Example-MRI-Request",
+                "extension": [{
+                        "url": "http://fhir.org/argonaut/StructureDefinition/pama-rating",
+                        "valueCodeableConcept": {
+                            "coding": [{
+                                "system": "http://fhir.org/argonaut/CodeSystem/pama-rating",
+                                "code": "not-applicable"
+                            }]
                         }
-                      ]
-                    }
-                  },
-                  {
-                    "url":"http://fhir.org/argonaut/StructureDefinition/pama-rating-qcdsm-consulted",
-                    "valueUri":"http://example-cds-service.fhir.org/qualified-cds/provider"
-                  },
-                  {
-                    "url":"http://fhir.org/argonaut/StructureDefinition/pama-rating-auc-applied",
-                    "valueUri":"https://acsearch.acr.org/70910548971"
-                  },
-                  {
-                    "url":"http://fhir.org/argonaut/StructureDefinition/pama-rating-consult-id",
-                    "valueUri":"urn:uuid:55f3b7fc-9955-420e-a460-ff284b2956e6"
-                  }
-                ],
-                "status":"draft",
-                "intent":"plan",
-                "code":{
-                  "coding":[
+                    },
                     {
-                      "system":"http://loinc.org",
-                      "code":"36801-9"
+                        "url": "http://fhir.org/argonaut/StructureDefinition/pama-rating-qcdsm-consulted",
+                        "valueUri": "http://example-cds-service.fhir.org/qualified-cds/provider"
+                    },
+                    {
+                        "url": "http://fhir.org/argonaut/StructureDefinition/pama-rating-auc-applied",
+                        "valueUri": "https://acsearch.acr.org/70910548971"
+                    },
+                    {
+                        "url": "http://fhir.org/argonaut/StructureDefinition/pama-rating-consult-id",
+                        "valueUri": "urn:uuid:55f3b7fc-9955-420e-a460-ff284b2956e6"
                     }
-                  ],
-                  "text":"MRA Knee Vessels Right"
+                ],
+                "status": "draft",
+                "intent": "plan",
+                "code": {
+                    "coding": [{
+                        "system": "http://loinc.org",
+                        "code": "36801-9"
+                    }],
+                    "text": "MRA Knee Vessels Right"
                 },
-                "subject":{
-                  "reference":"Patient/MRI-59879846"
+                "subject": {
+                    "reference": "Patient/MRI-59879846"
                 },
-                "reasonCode":[
-                  {
-                    "coding":[
-                      {
-                        "system":"http://hl7.org/fhir/sid/icd-10",
-                        "code":"S83.511",
-                        "display":"Sprain of anterior cruciate ligament of right knee"
-                      }
-                    ]
-                  }
-                ]
-              }
+                "reasonCode": [{
+                    "coding": [{
+                        "system": "http://hl7.org/fhir/sid/icd-10",
+                        "code": "S83.511",
+                        "display": "Sprain of anterior cruciate ligament of right knee"
+                    }]
+                }]
             }
-          ]
-        }
-      ]
+        }]
     }
-  ]
 }
 ```
 
@@ -209,76 +180,57 @@ Example response when criteria do apply:
 
 ```json
 {
-  "cards":[
-    {
-      "suggestions":[
-        {
-          "extension":{
-            "http://fhir.org/argonaut/pama-rating-auto-apply":true
-          },
-          "actions":[
-            {
-              "type":"update",
-              "resource":{
-                "resourceType":"ServiceRequest",
-                "id":"Example-MRI-Request",
-                "extension":[
-                  {
-                    "url":"http://fhir.org/argonaut/StructureDefinition/pama-rating",
-                    "valueCodeableConcept":{
-                      "coding":[
-                        {
-                          "system":"http://fhir.org/argonaut/CodeSystem/pama-rating",
-                          "code":"appropriate"
+    "cards": [],
+    "extension": {
+        "actions": [{
+            "type": "update",
+            "resource": {
+                "resourceType": "ServiceRequest",
+                "id": "Example-MRI-Request",
+                "extension": [{
+                        "url": "http://fhir.org/argonaut/StructureDefinition/pama-rating",
+                        "valueCodeableConcept": {
+                            "coding": [{
+                                "system": "http://fhir.org/argonaut/CodeSystem/pama-rating",
+                                "code": "appropriate"
+                            }]
                         }
-                      ]
-                    }
-                  },
-                  {
-                    "url":"http://fhir.org/argonaut/StructureDefinition/pama-rating-qcdsm-consulted",
-                    "valueUri":"http://example-cds-service.fhir.org/qualified-cds/provider"
-                  },
-                  {
-                    "url":"http://fhir.org/argonaut/StructureDefinition/pama-rating-auc-applied",
-                    "valueUri":"https://acsearch.acr.org/70910548971"
-                  },
-                  {
-                    "url":"http://fhir.org/argonaut/StructureDefinition/pama-rating-consult-id",
-                    "valueUri":"urn:uuid:55f3b7fc-9955-420e-a460-ff284b2956e6"
-                  }
-                ],
-                "status":"draft",
-                "intent":"plan",
-                "code":{
-                  "coding":[
+                    },
                     {
-                      "system":"http://loinc.org",
-                      "code":"36801-9"
+                        "url": "http://fhir.org/argonaut/StructureDefinition/pama-rating-qcdsm-consulted",
+                        "valueUri": "http://example-cds-service.fhir.org/qualified-cds/provider"
+                    },
+                    {
+                        "url": "http://fhir.org/argonaut/StructureDefinition/pama-rating-auc-applied",
+                        "valueUri": "https://acsearch.acr.org/70910548971"
+                    },
+                    {
+                        "url": "http://fhir.org/argonaut/StructureDefinition/pama-rating-consult-id",
+                        "valueUri": "urn:uuid:55f3b7fc-9955-420e-a460-ff284b2956e6"
                     }
-                  ],
-                  "text":"MRA Knee Vessels Right"
+                ],
+                "status": "draft",
+                "intent": "plan",
+                "code": {
+                    "coding": [{
+                        "system": "http://loinc.org",
+                        "code": "36801-9"
+                    }],
+                    "text": "MRA Knee Vessels Right"
                 },
-                "subject":{
-                  "reference":"Patient/MRI-59879846"
+                "subject": {
+                    "reference": "Patient/MRI-59879846"
                 },
-                "reasonCode":[
-                  {
-                    "coding":[
-                      {
-                        "system":"http://hl7.org/fhir/sid/icd-10",
-                        "code":"S83.511",
-                        "display":"Sprain of anterior cruciate ligament of right knee"
-                      }
-                    ]
-                  }
-                ]
-              }
+                "reasonCode": [{
+                    "coding": [{
+                        "system": "http://hl7.org/fhir/sid/icd-10",
+                        "code": "S83.511",
+                        "display": "Sprain of anterior cruciate ligament of right knee"
+                    }]
+                }]
             }
-          ]
-        }
-      ]
+        }]
     }
-  ]
 }
 ```
 
