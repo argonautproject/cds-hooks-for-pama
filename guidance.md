@@ -73,123 +73,135 @@ A CDS client, or EHR, **SHALL** support the following behaviors to process a PAM
 ### CDS Client
 Example request:
 
-    {
-      "hookInstance": "d1577c69-dfbe-44ad-ba6d-3e05e953b2ea",
-      "fhirServer": "http://hooks.smarthealthit.org:9080",
-      "context": {
-          "userId": "Practitioner/123",
-          "patientId": "MRI-59879846",
-          "encounterId": "89284",
-          "selections": ["ServiceRequest/example-MRI-59879846"],
-          "draftOrders": {
-              "resourceType": "Bundle",
-              "entry": [
+```
+{
+  "hookInstance":"d1577c69-dfbe-44ad-ba6d-3e05e953b2ea",
+  "fhirServer":"http://hooks.smarthealthit.org:9080",
+  "context":{
+    "userId":"Practitioner/123",
+    "patientId":"MRI-59879846",
+    "encounterId":"89284",
+    "selections":[
+      "ServiceRequest/example-MRI-59879846"
+    ],
+    "draftOrders":{
+      "resourceType":"Bundle",
+      "entry":[
+        {
+          "resource":{
+            "resourceType":"ServiceRequest",
+            "id":"Example-MRI-Request",
+            "status":"draft",
+            "intent":"plan",
+            "code":{
+              "coding":[
+                {
+                  "system":"http://loinc.org",
+                  "code":"36801-9"
+                }
+              ],
+              "text":"MRA Knee Vessels Right"
+            },
+            "subject":{
+              "reference":"Patient/MRI-59879846"
+            },
+            "reasonCode":[
+              {
+                "coding":[
                   {
-                      "resource": {
-                          "resourceType": "ServiceRequest",
-                          "id": "Example-MRI-Request",
-                          "status": "draft",
-                          "intent": "plan",
-                          "code": {
-                              "coding": [
-                                  {
-                                      "system": "http://loinc.org",
-                                      "code": "36801-9"
-                                  }
-                              ],  
-                              "text": "MRA Knee Vessels Right"
-                          },
-                          "subject": {"reference": "Patient/MRI-59879846"},
-                          "reasonCode": [
-                              {
-                                  "coding": [
-                                      {
-                                          "system": "http://hl7.org/fhir/sid/icd-10",
-                                          "code": "S83.511",
-                                          "display": "Sprain of anterior cruciate ligament of right knee"
-                                      }
-                                    ]
-                                }
-                            ]
-                        }
-                    }
+                    "system":"http://hl7.org/fhir/sid/icd-10",
+                    "code":"S83.511",
+                    "display":"Sprain of anterior cruciate ligament of right knee"
+                  }
                 ]
-            }
+              }
+            ]
+          }
         }
-    } Need to add Prefetch!
+      ]
+    }
+  }
+}
+```
+
+Need to add Prefetch!
 
 ### CDS Service Responses
 
 Example response when AUC "Not Applicable":
 
-   ```json
+```json
 {
-"cards": [
-{
-    "suggestions": [
+  "cards":[
+    {
+      "suggestions":[
         {
-            "extension": {"http://fhir.org/argonaut/pama-rating-auto-apply": true},
-            "actions": [
-                {
-                    "type": "update",
-                    "resource": {
-                        "resourceType": "ServiceRequest",
-                        "id": "Example-MRI-Request",
-                        "extension": [
-                            {
-                                "url": "http://fhir.org/argonaut/StructureDefinition/pama-rating",
-                                "valueCodeableConcept": {
-                                    "coding": [
-                                        {
-                                            "system": "http://fhir.org/argonaut/CodeSystem/pama-rating",
-                                            "code": "not-applicable"
-                                        }
-                                    ]
-                                }
-                            },
-                            {
-                                "url": "http://fhir.org/argonaut/StructureDefinition/pama-rating-qcdsm-consulted",
-                                "valueUri": "http://example-cds-service.fhir.org/qualified-cds/provider"
-                            },
-                            {
-                                "url": "http://fhir.org/argonaut/StructureDefinition/pama-rating-auc-applied",
-                                "valueUri": "https://acsearch.acr.org/70910548971"
-                            },
-                            {
-                                "url": "http://fhir.org/argonaut/StructureDefinition/pama-rating-consult-id",
-                                "valueUri": "urn:uuid:55f3b7fc-9955-420e-a460-ff284b2956e6"
-                            }
-                        ],
-                        "status": "draft",
-                        "intent": "plan",
-                        "code": {
-                            "coding": [
-                                {
-                                    "system": "http://loinc.org",
-                                    "code": "36801-9"
-                                }
-                            ],
-                            "text": "MRA Knee Vessels Right"
-                        },
-                        "subject": {"reference": "Patient/MRI-59879846"},
-                        "reasonCode": [
-                            {
-                                "coding": [
-                                    {
-                                        "system": "http://hl7.org/fhir/sid/icd-10",
-                                        "code": "S83.511",
-                                        "display": "Sprain of anterior cruciate ligament of right knee"
-                                    }
-                                ]
-                            }
-                        ]
+          "extension":{
+            "http://fhir.org/argonaut/pama-rating-auto-apply":true
+          },
+          "actions":[
+            {
+              "type":"update",
+              "resource":{
+                "resourceType":"ServiceRequest",
+                "id":"Example-MRI-Request",
+                "extension":[
+                  {
+                    "url":"http://fhir.org/argonaut/StructureDefinition/pama-rating",
+                    "valueCodeableConcept":{
+                      "coding":[
+                        {
+                          "system":"http://fhir.org/argonaut/CodeSystem/pama-rating",
+                          "code":"not-applicable"
+                        }
+                      ]
                     }
-                }
-            ]
+                  },
+                  {
+                    "url":"http://fhir.org/argonaut/StructureDefinition/pama-rating-qcdsm-consulted",
+                    "valueUri":"http://example-cds-service.fhir.org/qualified-cds/provider"
+                  },
+                  {
+                    "url":"http://fhir.org/argonaut/StructureDefinition/pama-rating-auc-applied",
+                    "valueUri":"https://acsearch.acr.org/70910548971"
+                  },
+                  {
+                    "url":"http://fhir.org/argonaut/StructureDefinition/pama-rating-consult-id",
+                    "valueUri":"urn:uuid:55f3b7fc-9955-420e-a460-ff284b2956e6"
+                  }
+                ],
+                "status":"draft",
+                "intent":"plan",
+                "code":{
+                  "coding":[
+                    {
+                      "system":"http://loinc.org",
+                      "code":"36801-9"
+                    }
+                  ],
+                  "text":"MRA Knee Vessels Right"
+                },
+                "subject":{
+                  "reference":"Patient/MRI-59879846"
+                },
+                "reasonCode":[
+                  {
+                    "coding":[
+                      {
+                        "system":"http://hl7.org/fhir/sid/icd-10",
+                        "code":"S83.511",
+                        "display":"Sprain of anterior cruciate ligament of right knee"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
         }
-    ]
-}
-]
+      ]
+    }
+  ]
 }
 ```
 
@@ -197,72 +209,76 @@ Example response when criteria do apply:
 
 ```json
 {
-"cards": [
+  "cards":[
     {
-        "suggestions": [
+      "suggestions":[
+        {
+          "extension":{
+            "http://fhir.org/argonaut/pama-rating-auto-apply":true
+          },
+          "actions":[
             {
-                "extension": {"http://fhir.org/argonaut/pama-rating-auto-apply": true},
-                "actions": [
-                    {
-                        "type": "update",
-                        "resource": {
-                            "resourceType": "ServiceRequest",
-                            "id": "Example-MRI-Request",
-                            "extension": [
-                                {
-                                    "url": "http://fhir.org/argonaut/StructureDefinition/pama-rating",
-                                    "valueCodeableConcept": {
-                                        "coding": [
-                                            {
-                                                "system": "http://fhir.org/argonaut/CodeSystem/pama-rating",
-                                                "code": "appropriate"
-                                            }
-                                        ]
-                                    }
-                                },
-                                {
-                                    "url": "http://fhir.org/argonaut/StructureDefinition/pama-rating-qcdsm-consulted",
-                                    "valueUri": "http://example-cds-service.fhir.org/qualified-cds/provider"
-                                },
-                                {
-                                    "url": "http://fhir.org/argonaut/StructureDefinition/pama-rating-auc-applied",
-                                    "valueUri": "https://acsearch.acr.org/70910548971"
-                                },
-                                {
-                                    "url": "http://fhir.org/argonaut/StructureDefinition/pama-rating-consult-id",
-                                    "valueUri": "urn:uuid:55f3b7fc-9955-420e-a460-ff284b2956e6"
-                                }
-                            ],
-                            "status": "draft",
-                            "intent": "plan",
-                            "code": {
-                                "coding": [
-                                    {
-                                        "system": "http://loinc.org",
-                                        "code": "36801-9"
-                                    }
-                                ],
-                                "text": "MRA Knee Vessels Right"
-                            },
-                            "subject": {"reference": "Patient/MRI-59879846"},
-                            "reasonCode": [
-                                {
-                                    "coding": [
-                                        {
-                                            "system": "http://hl7.org/fhir/sid/icd-10",
-                                            "code": "S83.511",
-                                            "display": "Sprain of anterior cruciate ligament of right knee"
-                                        }
-                                    ]
-                                }
-                            ]
+              "type":"update",
+              "resource":{
+                "resourceType":"ServiceRequest",
+                "id":"Example-MRI-Request",
+                "extension":[
+                  {
+                    "url":"http://fhir.org/argonaut/StructureDefinition/pama-rating",
+                    "valueCodeableConcept":{
+                      "coding":[
+                        {
+                          "system":"http://fhir.org/argonaut/CodeSystem/pama-rating",
+                          "code":"appropriate"
                         }
+                      ]
                     }
+                  },
+                  {
+                    "url":"http://fhir.org/argonaut/StructureDefinition/pama-rating-qcdsm-consulted",
+                    "valueUri":"http://example-cds-service.fhir.org/qualified-cds/provider"
+                  },
+                  {
+                    "url":"http://fhir.org/argonaut/StructureDefinition/pama-rating-auc-applied",
+                    "valueUri":"https://acsearch.acr.org/70910548971"
+                  },
+                  {
+                    "url":"http://fhir.org/argonaut/StructureDefinition/pama-rating-consult-id",
+                    "valueUri":"urn:uuid:55f3b7fc-9955-420e-a460-ff284b2956e6"
+                  }
+                ],
+                "status":"draft",
+                "intent":"plan",
+                "code":{
+                  "coding":[
+                    {
+                      "system":"http://loinc.org",
+                      "code":"36801-9"
+                    }
+                  ],
+                  "text":"MRA Knee Vessels Right"
+                },
+                "subject":{
+                  "reference":"Patient/MRI-59879846"
+                },
+                "reasonCode":[
+                  {
+                    "coding":[
+                      {
+                        "system":"http://hl7.org/fhir/sid/icd-10",
+                        "code":"S83.511",
+                        "display":"Sprain of anterior cruciate ligament of right knee"
+                      }
+                    ]
+                  }
                 ]
+              }
             }
-        ]
+          ]
+        }
+      ]
     }
-]
+  ]
 }
 ```
 
