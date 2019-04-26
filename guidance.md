@@ -10,7 +10,7 @@ When placing an order for advanced imaging services, the EHR invokes an [order-s
 - Respond with suggestion cards that convey valid alternatives to the draft order (where each alternative includes a pre-calculated appropriateness Rating based on available information)
 - (TODO, once SMART Web Messaging specification is ready) Respond with an "App Link" card to gather additional information and generate a more accurate Rating.
 
-This implementation guide proposes a small spanning set of "appropriatenessRating" values in a CodeableConcept, but these can be extended with more specific value sets for each set of Appropriate Use Criteria.
+This implementation guide proposes a small spanning set of appropriateness rating Codings, but these can be extended with translations from more specific values for each set of Appropriate Use Criteria.
 
 ## CDS Client Prepares a PAMA Request
 
@@ -50,7 +50,7 @@ Argonaut FHIR extensions for PAMA, within each **ServiceRequest** resource to co
 
 | Field | Optionality | Type | Description |
 | ----- | -------- | ---- | ---- |
-| `http://fhir.org/argonaut/pama-rating` | REQUIRED | *CodeableConcept* | 'Usually Appropriate'; 'May Be Appropriate'; 'Usually Not Appropriate'; 'Not Applicable'
+| `http://fhir.org/argonaut/pama-rating` | REQUIRED | *CodeableConcept* | MUST include an Coding with system "http://fhir.org/argonaut/CodeSystem/pama-rating" and code 'apropriate' or `inappropriate` or `not-applicable` and MAY include additional translation Codings with more specific details|
 | `http://fhir.org/argonaut/pama-rating-qcdsm-consulted` | REQUIRED |  *uri* | canonical `url` representing the Qualified CDS Mechanism that was consulted. (Note: In future this may be a CMS assigned GCODE to identify service)correlation handle that can be used for audit logging |
 | `http://fhir.org/argonaut/pama-rating-consult-id` | REQUIRED | *uri* | correlation handle that can be used for audit logging |
 | `http://fhir.org/argonaut/pama-rating-auc-applied` | OPTIONAL |  *uri* | URL indicating the AUC applied |
