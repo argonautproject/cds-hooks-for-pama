@@ -12,57 +12,61 @@ When placing an order for advanced imaging services, the EHR invokes an [order-s
 
 This implementation guide proposes a small spanning set of "appropriatenessRating" values in a CodeableConcept, but these can be extended with more specific value sets for each set of Appropriate Use Criteria.
 
-## Context
+## CDS Client Prepares a PAMA Request
 
-### Hook
+A PAMA Request uses the [`order-select` hook](https://cds-hooks.org/hooks/order-select/),
+firing the hook before a clinician gets to the point of signing an order.
 
-[Order-Select](https://cds-hooks.org/hooks/order-select/)
+The request context **SHALL** include:
 
-In support of the PAMA requirements, the [order-select](https://cds-hooks.org/hooks/order-select/) hook will fire prior to a clinician signing an order.
+- The `draftOrders` field with a FHIR R4 bundle of [ServiceRequest](http://hl7.org/fhir/servicerequest.html) resources (and any supporting resources)
+- TODO: other requirements on the supplies ServiceRequest (e.g., codes)
 
-### CDS Service Response
 
-The guidance below is a starting point prior to deployment of SMART Web Messaging.
+## CDS Service returns a PAMA Response
 
-Argonaut PAMA extensions at the top level of the response to communicate:
+The CDS Service should use supplied details to determine whether the request is relevant to any CMS-defined priority clinical areas for PAMA. If the requested is determine to be "PAMA-relevant" on this basis,
+the CDS Service MUST provide a PAMA Response by including the required PAMA extensions described below.
+If the request is not determined to be "PAMA-relevant", the CDS Service MAY choose not to respond with PAMA extensions.
+
+The CDS Service produces a PAMA Response by:
+
+1. Creating a _suggestion_ card for each supplied order that was deemed PAMA-relevant. The 
+   card should have a `pama-rating-auto-apply` extension set to `true` to indicate that this
+   card does not make any semantic change to the ServiceRequest, but only includes rating extensions.
+2. Optionally creating a set of proposed alternatively orders, as _suggestion_ cards that do *not*
+   include an auto-apply value of `true`.
+3. Optionally creating a set of _app link_ cards to launch external apps to capture additional data (e.g. prior diagnostic work completed, previous procedures performed, information from review of systems) or provide advice
+
+Argonaut CDS Hooks extension for PAMA, to be used at the top level of a `suggestions` entry:
 
 | Field | Optionality | Type | Description |
 | --- | ---- |  ---- |  ---- | 
-| `pama-rating-auto-apply` | REQUIRED | *boolean* |  indicator to the requesting client to auto apply the score |
+| `pama-rating-auto-apply` | OPTIONAL | *boolean* |  indicator to the requesting client to auto apply the score, rather than presenting it for a user to manually accept. This MUST NOT be set to true if the suggestion makes any changes beyond applying a PAMA response.|
 
-Argonaut PAMA extensions within each **ServiceRequest** resource to communicate:
+
+Argonaut FHIR extensions for PAMA, within each **ServiceRequest** resource to communicate:
 
 | Field | Optionality | Type | Description |
 | ----- | -------- | ---- | ---- |
-| `pama-rating` | REQUIRED | *CodeableConcept* | 'Usually Appropriate'; 'May Be Appropriate'; 'Usually Not Appropriate'; 'Not Applicable'
-| `pama-rating-qcdsm-consulted` | REQUIRED |  *uri* | canonical `url` representing the Qualified CDS Mechanism that was consulted. (Note: In future this may be a CMS assigned GCODE to identify service)correlation handle that can be used for audit logging |
-| `pama-rating-auc-applied` | REQUIRED |  *identifier* | identifier for the AUC applied
-| `pama-rating-consult-id` | REQUIRED | *uri* | correlation handle that can be used for audit logging
+| `http://fhir.org/argonaut/pama-rating` | REQUIRED | *CodeableConcept* | 'Usually Appropriate'; 'May Be Appropriate'; 'Usually Not Appropriate'; 'Not Applicable'
+| `http://fhir.org/argonaut/pama-rating-qcdsm-consulted` | REQUIRED |  *uri* | canonical `url` representing the Qualified CDS Mechanism that was consulted. (Note: In future this may be a CMS assigned GCODE to identify service)correlation handle that can be used for audit logging |
+| `http://fhir.org/argonaut/pama-rating-consult-id` | REQUIRED | *uri* | correlation handle that can be used for audit logging |
+| `http://fhir.org/argonaut/pama-rating-auc-applied` | OPTIONAL |  *uri* | URL indicating the AUC applied |
 
 
+ 
+### CDS Client Processes PAMA Response
 
-The CDS service response **MAY** provide:
+A CDS client, or EHR, **SHALL** support the following behaviors to process a PAMA Response:
 
-- An _app link card_ if they need to capture additional data (e.g. prior diagnostic work completed, previous procedures performed, information from review of systems)
-
-### CDS Client
-
-The CDS client invoking the order-select hook **SHALL** include:
-
-- The draftOrders field with a FHIR R4 bundle [ServiceRequest](http://hl7.org/fhir/servicerequest.html) and all supporting resources.
-
-When the ServiceRequest is finalized it would lead to the performance of a study whose results would eventually be summarized in a DiagnosticReport, with imaging data conveyed as an ImagingStudy.
-
-A CDS client, or EHR, **SHALL** support:
-
-- Display of a response that no criteria were applicable, when this is the case
-- Display of an _information_ card which will include a score, reason for no score
-- Automatic incorporation of appropriatenessRating information from an _information card_, when such a rating is available
-- Display _suggestion_ cards that convey valid alternative orders
-- Display an _app link card_ with a link to an app (often a SMART App) that a clinician can interact with (but without a return-path for scoring information)
+- Automatically incorporate an appropriateness rating from any _suggestion card_ when the auto-apply flag is set to `true`
+- Communicate any automatically-incorporated appropriateness ratings to the user
+- Store any automatically-incorporated appropriatness ratings and make them available for subsequent reporting
+- Display any _suggestion_ cards that convey valid alternative orders
+- Display _app link_ cards that can launch an app (often a SMART App) that a clinician can interact with (but without a return-path for scoring information)
 - TODO once SMART Web Messaging specification is stable
-  - Display an _app link card_ to launch a SMART App with SMART Web Messaging support, allowing the CDS service to collect additional information through interacting with the clinician, and allowing the CDS service to pass back a fully-scored order to the EHR when the interaction is complete.
-
+  - Display a _app link_ cards to launch a SMART App with SMART Web Messaging support, allowing the CDS service to collect additional information through interacting with the clinician, and allowing the CDS service to pass back a fully-scored order to the EHR when the interaction is complete.
 
 
 ## End to end example CDS Scenario: (working on it!)
