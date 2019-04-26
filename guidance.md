@@ -25,15 +25,16 @@ The request context **SHALL** include:
 
 ## CDS Service returns a PAMA Response
 
-The CDS Service should use supplied details to determine whether the request is relevant to any CMS-defined priority clinical areas for PAMA. If the requested is determine to be "PAMA-relevant" on this basis,
-the CDS Service MUST provide a PAMA Response by including the required PAMA extensions described below.
-If the request is not determined to be "PAMA-relevant", the CDS Service MAY choose not to respond with PAMA extensions.
+Since a CDS Services might offer multi-purpose advice, accepting PAMA Requests as well as unrelated requests, the CDS Service must first determine
+whether each incoming draft ServiceRequest is "PAMA-relevant". At a minimum, the CDS Service MUST recognize ServiceRequests that pertain to priority clinical areas defined
+by CMS, and MAY recognize additional clinical areas.
 
-The CDS Service produces a PAMA Response by:
+For each PAMA-relevant ServiceRequest, the CDS Service MUST provide a PAMA Response by including the required PAMA extensions described below.
 
-1. Creating a _suggestion_ card for each supplied order that was deemed PAMA-relevant. The 
-   card should have a `pama-rating-auto-apply` extension set to `true` to indicate that this
-   card does not make any semantic change to the ServiceRequest, but only includes rating extensions.
+The CDS Service produces a PAMA Response for each PAMA-relevant ServiceRequest by:
+
+1. Creating a _suggestion_ card with the `pama-rating-auto-apply` extension set to `true`, which indicate that this
+   card does not make any semantic change to the ServiceRequest, but only attaches a set of appropriateness rating extensions.
 2. Optionally creating a set of proposed alternatively orders, as _suggestion_ cards that do *not*
    include an auto-apply value of `true`.
 3. Optionally creating a set of _app link_ cards to launch external apps to capture additional data (e.g. prior diagnostic work completed, previous procedures performed, information from review of systems) or provide advice
@@ -54,13 +55,12 @@ Argonaut FHIR extensions for PAMA, within each **ServiceRequest** resource to co
 | `http://fhir.org/argonaut/pama-rating-consult-id` | REQUIRED | *uri* | correlation handle that can be used for audit logging |
 | `http://fhir.org/argonaut/pama-rating-auc-applied` | OPTIONAL |  *uri* | URL indicating the AUC applied |
 
-
  
 ### CDS Client Processes PAMA Response
 
 A CDS client, or EHR, **SHALL** support the following behaviors to process a PAMA Response:
 
-- Automatically incorporate an appropriateness rating from any _suggestion card_ when the auto-apply flag is set to `true`
+- Automatically incorporate appropriateness ratings from any _suggestion cards_ where the auto-apply flag is set to `true`
 - Communicate any automatically-incorporated appropriateness ratings to the user
 - Store any automatically-incorporated appropriatness ratings and make them available for subsequent reporting
 - Display any _suggestion_ cards that convey valid alternative orders
