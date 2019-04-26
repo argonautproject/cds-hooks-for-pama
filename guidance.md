@@ -50,7 +50,7 @@ Argonaut FHIR extensions for PAMA, within each **ServiceRequest** resource to co
 
 | Field | Optionality | Type | Description |
 | ----- | -------- | ---- | ---- |
-| `http://fhir.org/argonaut/pama-rating` | REQUIRED | *CodeableConcept* | MUST include an Coding with system "http://fhir.org/argonaut/CodeSystem/pama-rating" and code 'apropriate' or `inappropriate` or `not-applicable` and MAY include additional translation Codings with more specific details|
+| `http://fhir.org/argonaut/pama-rating` | REQUIRED | *CodeableConcept* | MUST include a Coding with system `http://fhir.org/argonaut/CodeSystem/pama-rating` and code `apropriate` or `inappropriate` or `not-applicable` and MAY include additional translation Codings with more specific details|
 | `http://fhir.org/argonaut/pama-rating-qcdsm-consulted` | REQUIRED |  *uri* | canonical `url` representing the Qualified CDS Mechanism that was consulted. (Note: In future this may be a CMS assigned GCODE to identify service)correlation handle that can be used for audit logging |
 | `http://fhir.org/argonaut/pama-rating-consult-id` | REQUIRED | *uri* | correlation handle that can be used for audit logging |
 | `http://fhir.org/argonaut/pama-rating-auc-applied` | OPTIONAL |  *uri* | URL indicating the AUC applied |
