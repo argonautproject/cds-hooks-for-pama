@@ -4,7 +4,7 @@ To incentivize appropriate use of advanced medical diagnostic imaging services (
 
 **Overview**
 
-When placing an order for advanced imaging services, the EHR invokes an [order-select](https://cds-hooks.org/hooks/order-select/) CDS Hook, passing the draft order(s) as FHIR ServiceRequest resources within the "draftOrders" context. The CDS Service can do one or more of the following:
+When placing an order for advanced imaging services, the EHR invokes an [order-select](https://cds-hooks.org/hooks/order-select/) or [order-sign](https://cds-hooks.org/hooks/order-sign/) CDS Hook, passing the draft order(s) as FHIR ServiceRequest resources within the "draftOrders" context. The CDS Service can do one or more of the following:
 
 - Respond with a card that attaches an appropriateness Rating directly to the draft order(s); this is typically a "best-effort" Rating that might be improved with the availability of additional information.
 - Respond with suggestion cards that convey valid alternatives to the draft order (where each alternative includes a pre-calculated appropriateness Rating based on available information)
@@ -15,7 +15,8 @@ This implementation guide proposes a small spanning set of appropriateness ratin
 ## CDS Client Prepares a PAMA Request
 
 A PAMA Request uses the [`order-select` hook](https://cds-hooks.org/hooks/order-select/),
-firing the hook before a clinician gets to the point of signing an order.
+firing the hook before a clinician gets to the point of signing an order, or the [`order-sign` hook](https://cds-hooks.org/hooks/order-sign/),
+firing the hook once all the order details are complete and the clinician is ready to sign the order.
 
 The request context **SHALL** include:
 
