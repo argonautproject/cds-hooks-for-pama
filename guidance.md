@@ -15,7 +15,7 @@ This implementation guide proposes a small spanning set of appropriateness ratin
 ## CDS Client Prepares a PAMA Request
 
 A PAMA Request uses the [`order-select`](https://cds-hooks.org/hooks/order-select/) hook
- or the [`order-sign`](https://cds-hooks.org/hooks/order-sign/) hook. The [`order-select`](https://cds-hooks.org/hooks/order-select/) hook fires before a clinician gets to the point of signing an order, which allows Clients to give advice before a provider completes too many decisions and is forced to rework the order details. The [`order-sign`](https://cds-hooks.org/hooks/order-sign/) hook fires after all the order details are complete and the clinician is ready to sign the order. 
+ or the [`order-sign`](https://cds-hooks.org/hooks/order-sign/) hook. In general, CDS Clients should attempt to provide advice as early in the workflow as is feasible, to prevent repeated data entry or surprising evaluations. This means that  clients should prefer the [`order-select`](https://cds-hooks.org/hooks/order-select/) hook, since it fires before a clinician gets to the point of signing an order. The [`order-sign`](https://cds-hooks.org/hooks/order-sign/) hook fires after all the order details are complete and the clinician is ready to sign the order. 
 
 The request context **SHALL** include:
 
