@@ -14,15 +14,20 @@ This implementation guide proposes a small spanning set of appropriateness ratin
 
 ## CDS Client Prepares a PAMA Request
 
-A PAMA Request uses the [`order-select` hook](https://cds-hooks.org/hooks/order-select/),
-firing the hook before a clinician gets to the point of signing an order, or the [`order-sign` hook](https://cds-hooks.org/hooks/order-sign/),
-firing the hook once all the order details are complete and the clinician is ready to sign the order.
+A PAMA Request uses the [`order-select`](https://cds-hooks.org/hooks/order-select/) hook
+ or the [`order-sign`](https://cds-hooks.org/hooks/order-sign/) hook. The [`order-select`](https://cds-hooks.org/hooks/order-select/) hook fires before a clinician gets to the point of signing an order, which allows Clients to give advice before a provider completes too many decisions and is forced to rework the order details. The [`order-sign`](https://cds-hooks.org/hooks/order-sign/) hook fires after all the order details are complete and the clinician is ready to sign the order. 
 
 The request context **SHALL** include:
 
 - The `draftOrders` field with a FHIR R4 bundle of [ServiceRequest](http://hl7.org/fhir/servicerequest.html) resources (and any supporting resources)
 - TODO: other requirements on the supplies ServiceRequest (e.g., codes)
 
+### DRAFT of ServiceRequest Profile
+- status - FHIR value set [RequestStatus](http://build.fhir.org/valueset-request-status.html)
+- intent - FHIR value set [RequestIntent](http://build.fhir.org/valueset-request-intent.html)
+- code - Procedure or imaging study being requested. LOINC? CPT? SNOMED? Both?
+- subject - Patient
+- reasonCode - ICD?
 
 ## CDS Service returns a PAMA Response
 
@@ -49,7 +54,7 @@ Argonaut FHIR extensions for PAMA, within each **ServiceRequest** resource to co
 
 | Field | Optionality | Type | Description |
 | ----- | -------- | ---- | ---- |
-| `http://fhir.org/argonaut/pama-rating` | REQUIRED | *CodeableConcept* | MUST include a Coding with system `http://fhir.org/argonaut/CodeSystem/pama-rating` and code `apropriate` or `inappropriate` or `not-applicable` or `unknown` and MAY include additional translation Codings with more specific details|
+| `http://fhir.org/argonaut/pama-rating` | REQUIRED | *CodeableConcept* | MUST include a Coding with system `http://fhir.org/argonaut/CodeSystem/pama-rating` and code `apropriate` or `inappropriate` or `not-applicable` or `unknown` and MAY include additional translation Codings with more specific details. For example, an AUC score with a numeric value or alternative code such as 'May be appropriate' |
 | `http://fhir.org/argonaut/pama-rating-qcdsm-consulted` | REQUIRED |  *uri* | canonical `url` representing the Qualified CDS Mechanism that was consulted. (Note: In future this may be a CMS assigned GCODE to identify service)correlation handle that can be used for audit logging |
 | `http://fhir.org/argonaut/pama-rating-consult-id` | REQUIRED | *uri* | correlation handle that can be used for audit logging |
 | `http://fhir.org/argonaut/pama-rating-auc-applied` | OPTIONAL |  *uri* | URL indicating the AUC applied |
@@ -236,6 +241,14 @@ Example response when criteria do apply:
 ```
 
 
+### References and Links
+- [AUC program backgrround](https://www.cms.gov/medicare/quality-initiatives-patient-assessment-instruments/appropriate-use-criteria-program/index.html) (official [PDF document](https://www.cms.gov/Regulations-and-Guidance/Guidance/Transmittals/2018Downloads/R2040OTN.pdf))
+- [Information on CMS requirements, QQ modifier, and list of CPT codes for relevant orders](https://www.cms.gov/Outreach-and-Education/Medicare-Learning-Network-MLN/MLNMattersArticles/Downloads/MM10481.pdf)
+- [Offical provider led entities](https://www.cms.gov/Medicare/Quality-Initiatives-Patient-Assessment-Instruments/Appropriate-Use-Criteria-Program/PLE.html)
+- [Intermountain Proven Imaging](https://intermountainhealthcare.org/services/imaging-services/proven-imaging/step-1/)
+- [American College of Radiology (ACR) criteria](https://www.acr.org/Clinical-Resources/ACR-Appropriateness-Criteria)
+
+
 ### Steps to add once Web Messaging spec is ready
 
 - Additional Client (EHR) expectations
@@ -243,6 +256,8 @@ Example response when criteria do apply:
 - Process for &#39;re-triggering&#39; the order-select hook after changes have been made in both the CDS service and EHR. Is this a brand-new request? Is some sort of context retained to help CDS service?
 - Error conditions
 - Storage/tracking of information provided by the CDS service. Is this any different than non SMART Messaging case?
+
+
 
 Extra notes
 
