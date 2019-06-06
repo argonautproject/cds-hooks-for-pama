@@ -47,14 +47,14 @@ Argonaut CDS Hooks extension for PAMA, to be used at the top level of a `suggest
 
 | Field | Optionality | Type | Description |
 | --- | ---- |  ---- |  ---- | 
-| `actions` | OPTIONAL | *array* |  An array of `action` elements, following the same schema as the actions of a _suggestion card_. Each action muse use `type: "update"` to update a single ServiceRequest; the update MUST NOT make any semantic change to the ServiceRequest, but may attach appropriateness rating extensions.|
+| `actions` | OPTIONAL | *array* |  An array of `action` elements, following the same schema as the actions of a _suggestion card_. Each action must use `type: "update"` to update a single ServiceRequest; the update MUST NOT make any semantic change to the ServiceRequest, but may attach appropriateness rating extensions.|
 
 
 Argonaut FHIR extensions for PAMA, within each **ServiceRequest** resource to communicate:
 
 | Field | Optionality | Type | Description |
 | ----- | -------- | ---- | ---- |
-| `http://fhir.org/argonaut/pama-rating` | REQUIRED | *CodeableConcept* | MUST include a Coding with system `http://fhir.org/argonaut/CodeSystem/pama-rating` and code `apropriate` or `inappropriate` or `not-applicable` or `unknown` and MAY include additional translation Codings with more specific details. For example, an AUC score with a numeric value or alternative code such as 'May be appropriate' |
+| `http://fhir.org/argonaut/pama-rating` | REQUIRED | *CodeableConcept* | MUST include a Coding with system `http://fhir.org/argonaut/CodeSystem/pama-rating` and code `appropriate` or `inappropriate` or `not-applicable` or `unknown` and MAY include additional translation Codings with more specific details. For example, an AUC score with a numeric value or alternative code such as 'May be appropriate' |
 | `http://fhir.org/argonaut/pama-rating-qcdsm-consulted` | REQUIRED |  *uri* | canonical `url` representing the Qualified CDS Mechanism that was consulted. (Note: In future this may be a CMS assigned GCODE to identify service)correlation handle that can be used for audit logging |
 | `http://fhir.org/argonaut/pama-rating-consult-id` | REQUIRED | *uri* | correlation handle that can be used for audit logging |
 | `http://fhir.org/argonaut/pama-rating-auc-applied` | OPTIONAL |  *uri* | URL indicating the AUC applied |
