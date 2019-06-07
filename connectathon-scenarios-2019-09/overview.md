@@ -82,9 +82,6 @@ It will be found after the MRI that Mr. Everyman was documented to have *Ebstein
   </tr>
 </table>
 
-*TODO*: which ACR 
-
-
 ### Example leading to "not appropriate" rating
 
 
