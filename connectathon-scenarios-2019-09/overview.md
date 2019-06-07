@@ -227,7 +227,7 @@ It will be found after the MRI that Mr. Everyman was documented to have *Ebstein
    </td>
   </tr>
   <tr>
-   <td>
+   <td>—
    </td>
    <td>“May be appropriate” (https://acsearch.acr.org/docs/3101564/Narrative/)
    </td>
@@ -265,7 +265,7 @@ It will be found after the MRI that Mr. Everyman was documented to have *Ebstein
    </td>
   </tr>
   <tr>
-   <td>
+   <td>—
    </td>
    <td>“Usually appropriate” (https://acsearch.acr.org/docs/3101564/Narrative/)
    </td>
@@ -274,13 +274,13 @@ It will be found after the MRI that Mr. Everyman was documented to have *Ebstein
 
 
 
-## Real World Simulation Scenarios
+## Open-ended Simulation Scenarios
 
-These scenarios will test/simulate a more “real world” implementation of the CDS Hooks solution where there is more than one code that a clinician might choose when ordering a particular advanced imaging procedure (e.g. procedure X “is-a” MRI, procedure Y “is-a” CT Scan etc.) which are members of CPT “value sets” defined by CMS that will require justification. The selected code will participate in the order-select/order sign CDS Hook.  
+These scenarios will test/simulate a more “open-ended” implementation of where the CDS Client might provide various codes with similar/consistent meanings. For example, a clinician might choose one of several procedure codes that are members of CPT "value sets" defined by CMS as requiring justification.
 
-Correspondingly, there are “permitted” indications (diagnoses/symptoms/findings) for those procedures (What is appropriate is defined by the PLEs). Each indication type, e.g “brain aneurysm” has many ICD, SNOMED CT and/or local/interface codes that “is-a” brain aneurysm - represented in value sets. **For Connectathon testing purposes we will likely use subsets of the value sets. **The CDS Hook will find the 1..* (? Or would it stop at the 1<sup>st</sup> qualifying condition?), not find, or find other conditions/indications that would qualify.to respond. (Is there an order for the query? E.g. first look on Problem list, next look in encounter note, other notes).
+Correspondingly, there may be various codes used to convey the reason for a procedure, taking into account "is-a" relationships, synonyms, etc.  For example, an indication like “brain aneurysm” may be associated with many ICD, SNOMED CT and/or local/interface codes through an "is-a" relationship. **For Connectathon testing, these open-ended scenarios allow the CDS Client to choose any values within the sets described here. This allow for more realistic testing where an end-user can choose one of several values at an ordering screen, and receive meaningful feedback from the CDS Service.**
 
-These clinical scenarios are similar to the “single code value” scenarios – but small subsets of the CMS CPT value sets and the indication/condition value sets are/will be made available for the Connectathon track to simulate the vocabulary support needed/provided for the logic in the qCDSM and EHR.
+For these scenarios, a CDS Service should be able to recognize any of the codes specified, whether it's supplied as a `reasonCode` on the `ServiceRequest` oro discoverd via a FHIR query against existing resources (e.g., something present on the patient's active problem list). To support CDS Service developers, we will provide access to small subsets of 1) CMS CPT value sets, 2) indication/condition value sets.
 
 
 ### Example leading to "appropriate" rating
