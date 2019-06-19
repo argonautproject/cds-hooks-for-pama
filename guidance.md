@@ -25,9 +25,9 @@ The request context **SHALL** include:
 ### DRAFT of ServiceRequest Profile
 - status - FHIR value set [RequestStatus](http://build.fhir.org/valueset-request-status.html)
 - intent - FHIR value set [RequestIntent](http://build.fhir.org/valueset-request-intent.html)
-- code - Procedure or imaging study being requested. LOINC? CPT? SNOMED? Both?
+- code - CPT (extensible). Recommend SNOMED/LOINC if CPT is unavailable. Systems should also include Codings with more detail (e.g. via proprietary or local codes as a last resort)
 - subject - Patient
-- reasonCode - ICD?
+- reasonCode - ICD-10 or SNOMED CT (Extensible + Max-ValueSet) This requires SNOMED or ICD10, or free text if your system has neither.  
 
 ## CDS Service returns a PAMA Response
 
