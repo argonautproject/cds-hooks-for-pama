@@ -27,7 +27,7 @@ The request context **SHALL** include:
 - intent - FHIR value set [RequestIntent](http://build.fhir.org/valueset-request-intent.html)
 - code - CPT (extensible). Recommend SNOMED/LOINC if CPT is unavailable. Systems should also include Codings with more detail (e.g. via proprietary or local codes as a last resort)
 - subject - Patient
-- reasonCode - ICD-10 or SNOMED CT (Extensible + Max-ValueSet) This requires SNOMED or ICD10, or free text if your system has neither.  
+- reasonCode - ICD-10 or SNOMED CT (preferred)  
 
 ## CDS Service returns a PAMA Response
 
