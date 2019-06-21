@@ -6,7 +6,7 @@ To incentivize appropriate use of advanced medical diagnostic imaging services (
 
 When placing an order for advanced imaging services, the EHR invokes an [order-select](https://cds-hooks.org/hooks/order-select/) or [order-sign](https://cds-hooks.org/hooks/order-sign/) CDS Hook, passing the draft order(s) as FHIR ServiceRequest resources within the "draftOrders" context. The CDS Service can do one or more of the following:
 
-- Respond with a top-level `extension.actions` (defined below) that attaches an appropriateness Rating directly to the draft order(s); this is typically a "best-effort" Rating that might be improved with the availability of additional information.
+- Respond with a top-level `extension.systemActions` (defined below) that attaches an appropriateness Rating directly to the draft order(s); this is typically a "best-effort" Rating that might be improved with the availability of additional information.
 - Respond with suggestion cards that convey valid alternatives to the draft order (where each alternative includes a pre-calculated appropriateness Rating based on available information)
 - (TODO, once SMART Web Messaging specification is ready) Respond with an "App Link" card to gather additional information and generate a more accurate Rating.
 
@@ -39,7 +39,7 @@ For each PAMA-relevant ServiceRequest, the CDS Service MUST provide a PAMA Respo
 
 The CDS Service produces a PAMA Response for each PAMA-relevant ServiceRequest by:
 
-1. Creating an `actions` list as a root-level extension (see extension details below).
+1. Creating an `systemActions` list as a root-level extension (see extension details below).
 2. Optionally creating a set of proposed alternatively orders, as _suggestion_ cards
 3. Optionally creating a set of _app link_ cards to launch external apps to capture additional data (e.g. prior diagnostic work completed, previous procedures performed, information from review of systems) or provide advice
 
@@ -47,7 +47,7 @@ Argonaut CDS Hooks extension for PAMA, to be used at the top level of a `suggest
 
 | Field | Optionality | Type | Description |
 | --- | ---- |  ---- |  ---- | 
-| `actions` | OPTIONAL | *array* |  An array of `action` elements, following the same schema as the actions of a _suggestion card_. Each action must use `type: "update"` to update a single ServiceRequest; the update MUST NOT make any semantic change to the ServiceRequest, but may attach appropriateness rating extensions.|
+| `systemActions` | OPTIONAL | *array* |  An array of `action` elements, following the same schema as the actions of a _suggestion card_. Each action must use `type: "update"` to update a single ServiceRequest; the update MUST NOT make any semantic change to the ServiceRequest, but may attach appropriateness rating extensions.|
 
 
 Argonaut FHIR extensions for PAMA, within each **ServiceRequest** resource to communicate:
@@ -61,7 +61,7 @@ Argonaut FHIR extensions for PAMA, within each **ServiceRequest** resource to co
 
 A CDS client, or EHR, **SHOULD** support the following behaviors to process a PAMA Response:
 
-- Automatically incorporate appropriateness ratings from any actions in the top-level `extension.actions` array
+- Automatically incorporate appropriateness ratings from any actions in the top-level `extension.systemActions` array
 - Communicate any automatically-incorporated appropriateness ratings to the user
 - Store any automatically-incorporated appropriatness ratings and make them available for subsequent reporting
 - Correlate the CDS Service's client id with the CMS-issued G-code for subsequent reporting
@@ -128,7 +128,7 @@ Example response when AUC "Not Applicable":
 {
     "cards": [],
     "extension": {
-        "actions": [{
+        "systemActions": [{
             "type": "update",
             "resource": {
                 "resourceType": "ServiceRequest",
@@ -178,7 +178,7 @@ Example response when criteria do apply:
 {
     "cards": [],
     "extension": {
-        "actions": [{
+        "systemActions": [{
             "type": "update",
             "resource": {
                 "resourceType": "ServiceRequest",
