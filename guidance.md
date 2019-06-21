@@ -62,7 +62,7 @@ Argonaut FHIR extensions for PAMA, within each **ServiceRequest** resource to co
  
 ### CDS Client Processes PAMA Response
 
-A CDS client, or EHR, **SHALL** support the following behaviors to process a PAMA Response:
+A CDS client, or EHR, **SHOULD** support the following behaviors to process a PAMA Response:
 
 - Automatically incorporate appropriateness ratings from any actions in the top-level `extension.actions` array
 - Communicate any automatically-incorporated appropriateness ratings to the user
