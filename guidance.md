@@ -67,6 +67,7 @@ A CDS client, or EHR, **SHOULD** support the following behaviors to process a PA
 - Automatically incorporate appropriateness ratings from any actions in the top-level `extension.actions` array
 - Communicate any automatically-incorporated appropriateness ratings to the user
 - Store any automatically-incorporated appropriatness ratings and make them available for subsequent reporting
+- Correlate the CDS Service's client id with the CMS-issued G-code for subsequent reporting
 - Display any _suggestion_ cards that convey valid alternative orders
 - Display _app link_ cards that can launch an app (often a SMART App) that a clinician can interact with (but without a return-path for scoring information)
 - TODO once SMART Web Messaging specification is stable
