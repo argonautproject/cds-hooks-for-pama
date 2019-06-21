@@ -54,11 +54,8 @@ Argonaut FHIR extensions for PAMA, within each **ServiceRequest** resource to co
 
 | Field | Optionality | Type | Description |
 | ----- | -------- | ---- | ---- |
-| `http://fhir.org/argonaut/pama-rating` | REQUIRED | *CodeableConcept* | MUST include a Coding with system `http://fhir.org/argonaut/CodeSystem/pama-rating` and code `appropriate` or `inappropriate` or `not-applicable` or `unknown` and MAY include additional translation Codings with more specific details. For example, an AUC score with a numeric value or alternative code such as 'May be appropriate' |
-| `http://fhir.org/argonaut/pama-rating-qcdsm-consulted` | REQUIRED |  *uri* | canonical `url` representing the Qualified CDS Mechanism that was consulted. (Note: In future this may be a CMS assigned GCODE to identify service.)|
-| `http://fhir.org/argonaut/pama-rating-consult-id` | REQUIRED | *uri* | correlation handle that can be used for audit logging |
-| `http://fhir.org/argonaut/pama-rating-auc-applied` | OPTIONAL |  *uri* | URL indicating the AUC applied |
-
+| `http://fhir.org/argonaut/pama-rating` | REQUIRED | *CodeableConcept* | MUST include a Coding with system `http://fhir.org/argonaut/CodeSystem/pama-rating` and code `appropriate` or `not-appropriate` or `no-criteria-apply`. CDSMs MAY include additional translation Codings with more specific, finer-grained scores. For example, an AUC score with a numeric value or alternative code such as 'May be appropriate' |
+| `http://fhir.org/argonaut/pama-rating-consult-id` | REQUIRED | *uri* | Unique correlation handle that can be used for audit logging and, if needed, reporting to CMS as the Unique Consultation Identifier (UCI). |
  
 ### CDS Client Processes PAMA Response
 
@@ -146,14 +143,6 @@ Example response when AUC "Not Applicable":
                         }
                     },
                     {
-                        "url": "http://fhir.org/argonaut/StructureDefinition/pama-rating-qcdsm-consulted",
-                        "valueUri": "http://example-cds-service.fhir.org/qualified-cds/provider"
-                    },
-                    {
-                        "url": "http://fhir.org/argonaut/StructureDefinition/pama-rating-auc-applied",
-                        "valueUri": "https://acsearch.acr.org/70910548971"
-                    },
-                    {
                         "url": "http://fhir.org/argonaut/StructureDefinition/pama-rating-consult-id",
                         "valueUri": "urn:uuid:55f3b7fc-9955-420e-a460-ff284b2956e6"
                     }
@@ -202,14 +191,6 @@ Example response when criteria do apply:
                                 "code": "appropriate"
                             }]
                         }
-                    },
-                    {
-                        "url": "http://fhir.org/argonaut/StructureDefinition/pama-rating-qcdsm-consulted",
-                        "valueUri": "http://example-cds-service.fhir.org/qualified-cds/provider"
-                    },
-                    {
-                        "url": "http://fhir.org/argonaut/StructureDefinition/pama-rating-auc-applied",
-                        "valueUri": "https://acsearch.acr.org/70910548971"
                     },
                     {
                         "url": "http://fhir.org/argonaut/StructureDefinition/pama-rating-consult-id",
@@ -263,5 +244,6 @@ Example response when criteria do apply:
 Extra notes
 
 - Which AUCs do we need to support? Do they define different scoring systems? Do we need common roll-up codes like "Yes, Appropriate", "No, inappropriate" or "Indeterminate" ? Can we provide extensibility for AUCs to express their own scores too, directly? Do we capture which qualified QCDM who provided the score?
+   - CMS only recognizes three values for appropriateness on the claim: appropriate, not appropriate and no criteria apply. CDSMs and providers benefit from finer-grained appropriateness scores, which are often numeric and specific to that qCDSM or AUC method or PLE. The qCDSM may enhance it's service to the provider by returning both the CMS appropriateness indiciation and a more discrete score on the param-rating extension, through the use of a translation coding. TODO - example translation coding needed!
 - Which qualified PLEs? CMS [list here](https://www.cms.gov/Medicare/Quality-Initiatives-Patient-Assessment-Instruments/Appropriate-Use-Criteria-Program/PLE.html) e.g. [ACR](https://www.acr.org/Clinical-Resources/Clinical-Decision-Support) is qualified; [https://acsearch.acr.org/list](httpsf://acsearch.acr.org/list); like [this one](https://acsearch.acr.org/docs/70910/Narrative/)
 
