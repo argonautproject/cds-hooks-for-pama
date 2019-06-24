@@ -6,7 +6,7 @@ To incentivize appropriate use of advanced medical diagnostic imaging services (
 
 When placing an order for advanced imaging services, the EHR invokes an [order-select](https://cds-hooks.org/hooks/order-select/) or [order-sign](https://cds-hooks.org/hooks/order-sign/) CDS Hook, passing the draft order(s) as FHIR ServiceRequest resources within the "draftOrders" context. The CDS Service can do one or more of the following:
 
-- Respond with a card that attaches an appropriateness Rating directly to the draft order(s); this is typically a "best-effort" Rating that might be improved with the availability of additional information.
+- Respond with a top-level `extension.systemActions` (defined below) that attaches an appropriateness Rating directly to the draft order(s); this is typically a "best-effort" Rating that might be improved with the availability of additional information.
 - Respond with suggestion cards that convey valid alternatives to the draft order (where each alternative includes a pre-calculated appropriateness Rating based on available information)
 - (TODO, once SMART Web Messaging specification is ready) Respond with an "App Link" card to gather additional information and generate a more accurate Rating.
 
@@ -31,42 +31,42 @@ The request context **SHALL** include:
 
 ## CDS Service returns a PAMA Response
 
-Since a CDS Services might offer multi-purpose advice, accepting PAMA Requests as well as unrelated requests, the CDS Service must first determine
-whether each incoming draft ServiceRequest is "PAMA-relevant". At a minimum, the CDS Service MUST recognize ServiceRequests that pertain to priority clinical areas defined
-by CMS, and MAY recognize additional clinical areas.
+Since a CDS Services might offer multi-purpose advice, accepting PAMA Requests as well as unrelated requests, the CDS Service must first determine whether each incoming draft ServiceRequest is "PAMA-relevant". At a minimum, the CDS Service SHALL recognize ServiceRequests that pertain to priority clinical areas defined by CMS, and MAY recognize additional clinical areas.
 
-For each PAMA-relevant ServiceRequest, the CDS Service MUST provide a PAMA Response by including the required PAMA extensions described below.
+For each PAMA-relevant ServiceRequest, the CDS Service SHALL evaluate its PAMA AUCs and attempt to assign one of three PAMA Rating values (`appropriate` if there is an AUC consistent with the proposed imaging order, `not-appropriate` if there is an AUC that contra-indicates the proposed imaging order, or `no-criteria-apply` if no AUC pertains to the proposed imaging order). In the event that not enough information is available to reach one of these ratings (e.g., if key data have not been captured in a structured form), the CDS Service SHALL NOT produce a PAMA Response for the ServiceRequest, and SHOULD instead offer Cards with app links or suggestions that would lead to a computable rating (e.g., a link to an app that would collect additional information necessary to evaluate an AUC).
+
+For each PAMA-relevant ServiceRequest where a rating has been determined, the CDS Service SHALL provide a PAMA Response by including the required PAMA extensions described below.
 
 The CDS Service produces a PAMA Response for each PAMA-relevant ServiceRequest by:
 
-1. Creating an `actions` list as a root-level extension (see extension details below).
-2. Optionally creating a set of proposed alternatively orders, as _suggestion_ cards
-3. Optionally creating a set of _app link_ cards to launch external apps to capture additional data (e.g. prior diagnostic work completed, previous procedures performed, information from review of systems) or provide advice
+1. Creating an `systemActions` list as a root-level extension (see extension details below).
+2. Optionally creating a set of proposed alternative orders, as _suggestion_ cards.
+3. Optionally creating a set of _app link_ cards to launch external apps to capture additional data (e.g. prior diagnostic work completed, previous procedures performed, information from review of systems) or to provide advice.
 
-Argonaut CDS Hooks extension for PAMA, to be used at the top level of a `suggestions` entry:
+Argonaut CDS Hooks extension for PAMA, to be used at the top level of a CDS Hooks Response:
 
 | Field | Optionality | Type | Description |
 | --- | ---- |  ---- |  ---- | 
-| `actions` | OPTIONAL | *array* |  An array of `action` elements, following the same schema as the actions of a _suggestion card_. Each action must use `type: "update"` to update a single ServiceRequest; the update MUST NOT make any semantic change to the ServiceRequest, but may attach appropriateness rating extensions.|
+| `systemActions` | OPTIONAL | *array* |  An array of `action` elements, following the same schema as the actions of a _suggestion card_. Each action must use `type: "update"` to update a single ServiceRequest; the update MUST NOT make any semantic change to the ServiceRequest, but may attach appropriateness rating extensions.|
 
 
 Argonaut FHIR extensions for PAMA, within each **ServiceRequest** resource to communicate:
 
 | Field | Optionality | Type | Description |
 | ----- | -------- | ---- | ---- |
-| `http://fhir.org/argonaut/pama-rating` | REQUIRED | *CodeableConcept* | MUST include a Coding with system `http://fhir.org/argonaut/CodeSystem/pama-rating` and code `appropriate` or `inappropriate` or `not-applicable` or `unknown` and MAY include additional translation Codings with more specific details. For example, an AUC score with a numeric value or alternative code such as 'May be appropriate' |
-| `http://fhir.org/argonaut/pama-rating-qcdsm-consulted` | REQUIRED |  *uri* | canonical `url` representing the Qualified CDS Mechanism that was consulted. (Note: In future this may be a CMS assigned GCODE to identify service.)|
-| `http://fhir.org/argonaut/pama-rating-consult-id` | REQUIRED | *uri* | correlation handle that can be used for audit logging |
-| `http://fhir.org/argonaut/pama-rating-auc-applied` | OPTIONAL |  *uri* | URL indicating the AUC applied |
-
+| `http://fhir.org/argonaut/pama-rating` | REQUIRED | *CodeableConcept* | MUST include a Coding with system `http://fhir.org/argonaut/CodeSystem/pama-rating` and code `appropriate` or `not-appropriate` or `no-criteria-apply`. If a CDS Service cannot assign one of these three codes to a given ServiceRequest, then it SHALL NOT include the undetermined `ServiceRequest` within the `systemActions` list. qCDSMs MAY include additional translation Codings with more specific, finer-grained scores. For example, an AUC score with a numeric value or alternative code such as 'May be appropriate' |
+| `http://fhir.org/argonaut/pama-rating-qcdsm-consulted` | REQUIRED | *string* | CMS-assigned identifier for this Qualified CDS Mechanism consulted (also known as a "G-code").|
+| `http://fhir.org/argonaut/pama-rating-consult-id` | REQUIRED | *uri* | Unique correlation handle that can be used for audit logging and, if needed, reporting to CMS as the Unique Consultation Identifier (UCI). |
+| `http://fhir.org/argonaut/pama-rating-auc-applied	` | OPTIONAL | *uri* | URL indicating the AUC applied. This value can be helpful, for example, to assess which specific AUCs are most often over-riddden. |
  
 ### CDS Client Processes PAMA Response
 
-A CDS client, or EHR, **SHALL** support the following behaviors to process a PAMA Response:
+A CDS client, or EHR, **SHOULD** support the following behaviors to process a PAMA Response:
 
-- Automatically incorporate appropriateness ratings from any actions in the top-level `extension.actions` array
+- Automatically incorporate appropriateness ratings from any actions in the top-level `extension.systemActions` array
 - Communicate any automatically-incorporated appropriateness ratings to the user
 - Store any automatically-incorporated appropriatness ratings and make them available for subsequent reporting
+- Correlate the CDS Service's client id with the CMS-issued G-code for subsequent reporting
 - Display any _suggestion_ cards that convey valid alternative orders
 - Display _app link_ cards that can launch an app (often a SMART App) that a clinician can interact with (but without a return-path for scoring information)
 - TODO once SMART Web Messaging specification is stable
@@ -130,7 +130,7 @@ Example response when AUC "Not Applicable":
 {
     "cards": [],
     "extension": {
-        "actions": [{
+        "systemActions": [{
             "type": "update",
             "resource": {
                 "resourceType": "ServiceRequest",
@@ -140,17 +140,9 @@ Example response when AUC "Not Applicable":
                         "valueCodeableConcept": {
                             "coding": [{
                                 "system": "http://fhir.org/argonaut/CodeSystem/pama-rating",
-                                "code": "not-applicable"
+                                "code": "no-criteria-apply"
                             }]
                         }
-                    },
-                    {
-                        "url": "http://fhir.org/argonaut/StructureDefinition/pama-rating-qcdsm-consulted",
-                        "valueUri": "http://example-cds-service.fhir.org/qualified-cds/provider"
-                    },
-                    {
-                        "url": "http://fhir.org/argonaut/StructureDefinition/pama-rating-auc-applied",
-                        "valueUri": "https://acsearch.acr.org/70910548971"
                     },
                     {
                         "url": "http://fhir.org/argonaut/StructureDefinition/pama-rating-consult-id",
@@ -188,7 +180,7 @@ Example response when criteria do apply:
 {
     "cards": [],
     "extension": {
-        "actions": [{
+        "systemActions": [{
             "type": "update",
             "resource": {
                 "resourceType": "ServiceRequest",
@@ -201,14 +193,6 @@ Example response when criteria do apply:
                                 "code": "appropriate"
                             }]
                         }
-                    },
-                    {
-                        "url": "http://fhir.org/argonaut/StructureDefinition/pama-rating-qcdsm-consulted",
-                        "valueUri": "http://example-cds-service.fhir.org/qualified-cds/provider"
-                    },
-                    {
-                        "url": "http://fhir.org/argonaut/StructureDefinition/pama-rating-auc-applied",
-                        "valueUri": "https://acsearch.acr.org/70910548971"
                     },
                     {
                         "url": "http://fhir.org/argonaut/StructureDefinition/pama-rating-consult-id",
@@ -256,11 +240,3 @@ Example response when criteria do apply:
 - Process for &#39;re-triggering&#39; the order-select hook after changes have been made in both the CDS service and EHR. Is this a brand-new request? Is some sort of context retained to help CDS service?
 - Error conditions
 - Storage/tracking of information provided by the CDS service. Is this any different than non SMART Messaging case?
-
-
-
-Extra notes
-
-- Which AUCs do we need to support? Do they define different scoring systems? Do we need common roll-up codes like "Yes, Appropriate", "No, inappropriate" or "Indeterminate" ? Can we provide extensibility for AUCs to express their own scores too, directly? Do we capture which qualified QCDM who provided the score?
-- Which qualified PLEs? CMS [list here](https://www.cms.gov/Medicare/Quality-Initiatives-Patient-Assessment-Instruments/Appropriate-Use-Criteria-Program/PLE.html) e.g. [ACR](https://www.acr.org/Clinical-Resources/Clinical-Decision-Support) is qualified; [https://acsearch.acr.org/list](httpsf://acsearch.acr.org/list); like [this one](https://acsearch.acr.org/docs/70910/Narrative/)
-
