@@ -1,0 +1,16 @@
+{
+  "cards": [{
+    "summary": "Pick the right modality with Pediatric Heart Dx Pro",
+    "indicator": "info",
+    "source": {
+      "label": "Dx App Suite"
+    },
+    "links": [{
+      "label": "Heart Dx Pro",
+      "type": "smart",
+      "url": "https://dxpro.example.org/smart/launch",
+      "appContext": "internal-correlation-id-0a7a6d9f-e22c-4e4d-a75e-cff603eb6b40"
+    }]
+  }]
+}
+

@@ -1,0 +1,55 @@
+
+{
+  "cards": [],
+  "extension": {
+    "systemActions": [{
+      "type": "update",
+      "resource": {
+        "resourceType": "Bundle",
+        "entry": [{
+          "resource": {
+            "resourceType": "ServiceRequest",
+            "id": "Example-MRI-Request",
+            "extension": [{
+              "url": "http://fhir.org/argonaut/Extension/pama-rating",
+              "valueCodeableConcept": {
+                "coding": [{
+                  "system": "http://fhir.org/argonaut/CodeSystem/pama-rating",
+                  "code": "appropriate"
+                }]
+              }
+            },
+            {
+              "url": "http://fhir.org/argonaut/Extension/pama-rating-qcdsm-consulted",
+              "valueString": "example-gcode"
+            },
+            {
+              "url": "http://fhir.org/argonaut/Extension/pama-rating-consult-id",
+              "valueUri": "urn:uuid:55f3b7fc-9955-420e-a460-ff284b2956e6"
+            }
+            ]
+            "status": "draft",
+            "intent": "plan",
+            "code": {
+              "coding": [{
+                "system": "http://www.ama-assn.org/go/cpt",
+                "code": "72133"
+              }],
+              "text": "Lumbar spine CT"
+            },
+            "subject": {
+              "reference": "Patient/MRI-59879846"
+            },
+            "reasonCode": [{
+              "coding": [{
+                "system": "http://snomed.info/sct",
+                "code": "279039007",
+                "display": "Low back pain"
+              }]
+            }]
+          }
+        }]
+      }
+    }]
+  }
+}
