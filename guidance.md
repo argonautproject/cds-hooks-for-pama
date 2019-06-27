@@ -54,10 +54,10 @@ Argonaut FHIR extensions for PAMA, within each **ServiceRequest** resource to co
 
 | Field | Optionality | Type | Description |
 | ----- | -------- | ---- | ---- |
-| `http://fhir.org/argonaut/StructureDefinition/pama-rating` | REQUIRED | *CodeableConcept* | MUST include a Coding with system `http://fhir.org/argonaut/CodeSystem/pama-rating` and code `appropriate` or `not-appropriate` or `no-criteria-apply`. If a CDS Service cannot assign one of these three codes to a given ServiceRequest, then it SHALL NOT include the undetermined `ServiceRequest` within the `systemActions` list. qCDSMs MAY include additional translation Codings with more specific, finer-grained scores. For example, an AUC score with a numeric value or alternative code such as 'May be appropriate' |
-| `http://fhir.org/argonaut/StructureDefinition/pama-rating-qcdsm-consulted` | REQUIRED | *string* | CMS-assigned identifier for this Qualified CDS Mechanism consulted (also known as a "G-code").|
-| `http://fhir.org/argonaut/StructureDefinition/pama-rating-consult-id` | REQUIRED | *uri* | Unique correlation handle that can be used for audit logging and, if needed, reporting to CMS as the Unique Consultation Identifier (UCI). |
-| `http://fhir.org/argonaut/StructureDefinition/pama-rating-auc-applied	` | OPTIONAL | *uri* | URL indicating the AUC applied. This value can be helpful, for example, to assess which specific AUCs are most often over-riddden. |
+| `http://fhir.org/argonaut/Extension/pama-rating` | REQUIRED | *CodeableConcept* | MUST include a Coding with system `http://fhir.org/argonaut/CodeSystem/pama-rating` and code `appropriate` or `not-appropriate` or `no-criteria-apply`. If a CDS Service cannot assign one of these three codes to a given ServiceRequest, then it SHALL NOT include the undetermined `ServiceRequest` within the `systemActions` list. qCDSMs MAY include additional translation Codings with more specific, finer-grained scores. For example, an AUC score with a numeric value or alternative code such as 'May be appropriate' |
+| `http://fhir.org/argonaut/Extension/pama-rating-qcdsm-consulted` | REQUIRED | *string* | CMS-assigned identifier for this Qualified CDS Mechanism consulted (also known as a "G-code").|
+| `http://fhir.org/argonaut/Extension/pama-rating-consult-id` | REQUIRED | *uri* | Unique correlation handle that can be used for audit logging and, if needed, reporting to CMS as the Unique Consultation Identifier (UCI). |
+| `http://fhir.org/argonaut/Extension/pama-rating-auc-applied	` | OPTIONAL | *uri* | URL indicating the AUC applied. This value can be helpful, for example, to assess which specific AUCs are most often over-riddden. |
  
 ### CDS Client Processes PAMA Response
 
@@ -136,7 +136,7 @@ Example response when AUC "Not Applicable":
                 "resourceType": "ServiceRequest",
                 "id": "Example-MRI-Request",
                 "extension": [{
-                        "url": "http://fhir.org/argonaut/StructureDefinition/pama-rating",
+                        "url": "http://fhir.org/argonaut/Extension/pama-rating",
                         "valueCodeableConcept": {
                             "coding": [{
                                 "system": "http://fhir.org/argonaut/CodeSystem/pama-rating",
@@ -145,7 +145,7 @@ Example response when AUC "Not Applicable":
                         }
                     },
                     {
-                        "url": "http://fhir.org/argonaut/StructureDefinition/pama-rating-consult-id",
+                        "url": "http://fhir.org/argonaut/Extension/pama-rating-consult-id",
                         "valueUri": "urn:uuid:55f3b7fc-9955-420e-a460-ff284b2956e6"
                     }
                 ],
@@ -186,7 +186,7 @@ Example response when criteria do apply:
                 "resourceType": "ServiceRequest",
                 "id": "Example-MRI-Request",
                 "extension": [{
-                        "url": "http://fhir.org/argonaut/StructureDefinition/pama-rating",
+                        "url": "http://fhir.org/argonaut/Extension/pama-rating",
                         "valueCodeableConcept": {
                             "coding": [{
                                 "system": "http://fhir.org/argonaut/CodeSystem/pama-rating",
@@ -195,7 +195,7 @@ Example response when criteria do apply:
                         }
                     },
                     {
-                        "url": "http://fhir.org/argonaut/StructureDefinition/pama-rating-consult-id",
+                        "url": "http://fhir.org/argonaut/Extension/pama-rating-consult-id",
                         "valueUri": "urn:uuid:55f3b7fc-9955-420e-a460-ff284b2956e6"
                     }
                 ],
