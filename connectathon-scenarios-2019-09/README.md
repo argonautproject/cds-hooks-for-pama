@@ -30,6 +30,8 @@ entry screen provides a way to easily enter any of the following three orders:
 
 (TODO: add an example where `no-criteria-apply`.)
 
+We recommend that all participants review these [Scenarios for PAMA Connectathon Testing](detailed-clinical-cases.md) for additional details.
+
 * CDS Service returns a response with a `.extension.systemActions` array that
 includes an `update` action with an automated PAMA rating for the
 `ServiceRequest`, including extensions for the PAMA rating, qCDSM GCODE,
