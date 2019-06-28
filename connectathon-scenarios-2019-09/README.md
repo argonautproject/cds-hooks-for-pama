@@ -9,6 +9,8 @@ from:
 2. Suggestions for alternative orders presented in-workflow
 3. App-mediated order selection through SMART Web Messaging
 
+We'll use clinical histories and detailed codes documented in these [Scenarios for PAMA Connectathon Testing](detailed-clinical-cases.md)
+
 ## Scenario 1. Automated rating of orders in-workflow
 
 * EHR provides an order-entry form that triggers the `order-select` hook as
