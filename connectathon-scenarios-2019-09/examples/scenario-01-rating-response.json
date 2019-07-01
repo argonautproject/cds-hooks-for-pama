@@ -27,7 +27,7 @@
               "url": "http://fhir.org/argonaut/Extension/pama-rating-consult-id",
               "valueUri": "urn:uuid:55f3b7fc-9955-420e-a460-ff284b2956e6"
             }
-            ]
+            ],
             "status": "draft",
             "intent": "plan",
             "code": {
