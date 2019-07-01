@@ -15,9 +15,10 @@ We'll use clinical histories and detailed codes documented in these [Scenarios f
 
 * EHR provides an order-entry form that triggers the `order-select` hook as
 orders are entered (and optionally triggers `order-sign` when full order
-details are present). Order entry must be able to populate at least: patient,
-provider, and a `draftOrders` bundle containing a `ServiceRequest` with a
-`code` and a `reasonCode`. [See example request](./examples/scenario-01-outbound-request.json).
+details are present). Order entry must be able to populate at least: `userId`,
+`patientId`, `selections`(where applicable), and a `draftOrders` bundle containing
+a `ServiceRequest` with a `code` and a `reasonCode`.
+[See example request](./examples/scenario-01-outbound-request.json).
 
 For this connectathon scenario, we recommend that the order
 entry screen provides a way to easily enter any of the following three orders:
@@ -47,9 +48,10 @@ appropriate").
 
 * EHR provides an order-entry form that triggers the `order-select` hook as
 orders are entered (and optionally triggers `order-sign` when full order
-details are present). Order entry must be able to populate at least: patient,
-provider, and a `draftOrders` bundle containing a `ServiceRequest` with a
-`code` and a `reasonCode`. [See example request](./examples/scenario-02-outbound-request.json).
+details are present). Order entry must be able to populate at least: `userId`,
+`patientId`, `selections`(where applicable), and a `draftOrders` bundle containing
+a `ServiceRequest` with a `code` and a `reasonCode`.
+[See example request](./examples/scenario-02-outbound-request.json).
 
 * CDS Service returns a suggestion card that performs an `update` on the
 proposed order, changing the `code` and presmuably preserving the `reasonCode`.
@@ -68,9 +70,10 @@ and PAMA rating extensions.
 
 * EHR provides an order-entry form that triggers the `order-select` hook as
 orders are entered (and optionally triggers `order-sign` when full order
-details are present). Order entry must be able to populate at least: patient,
-provider, and a `draftOrders` bundle containing a `ServiceRequest` with a
-`code` and a `reasonCode`. [See example request](./examples/scenario-02-outbound-request.json).
+details are present). Order entry must be able to populate at least: `userId`,
+`patientId`, `selections`(where applicable), and a `draftOrders` bundle containing
+a `ServiceRequest` with a `code` and a `reasonCode`.
+[See example request](./examples/scenario-02-outbound-request.json).
 
 * CDS Service returns a SMART App Link card including `appContext` to launch
 its CDS companion app. [See example request](./examples/scenario-03-app-launch-response.json).
