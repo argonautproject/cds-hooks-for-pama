@@ -8,7 +8,7 @@ When placing an order for advanced imaging services, the EHR invokes an [order-s
 
 - Respond with a top-level `extension.systemActions` (defined below) that attaches an appropriateness Rating directly to the draft order(s); this is typically a "best-effort" Rating that might be improved with the availability of additional information.
 - Respond with suggestion cards that convey valid alternatives to the draft order (where each alternative includes a pre-calculated appropriateness Rating based on available information)
-- (TODO, once SMART Web Messaging specification is ready) Respond with an "App Link" card to gather additional information and generate a more accurate Rating.
+- Respond with an "App Link" card to gather additional information and generate more suitable orders or more accurate Ratings
 
 This implementation guide proposes a small spanning set of appropriateness rating Codings, but these can be extended with translations from more specific values for each set of Appropriate Use Criteria.
 
@@ -68,10 +68,24 @@ A CDS client, or EHR, **SHOULD** support the following behaviors to process a PA
 - Store any automatically-incorporated appropriatness ratings and make them available for subsequent reporting
 - Correlate the CDS Service's client id with the CMS-issued G-code for subsequent reporting
 - Display any _suggestion_ cards that convey valid alternative orders
-- Display _app link_ cards that can launch an app (often a SMART App) that a clinician can interact with (but without a return-path for scoring information)
-- TODO once SMART Web Messaging specification is stable
-  - Display a _app link_ cards to launch a SMART App with SMART Web Messaging support, allowing the CDS service to collect additional information through interacting with the clinician, and allowing the CDS service to pass back a fully-scored order to the EHR when the interaction is complete.
+- Display _app link_ cards to launch a SMART App with SMART Web Messaging support, allowing the CDS service to launch a companion app that can collect additional information through interacting with the clinician, and allowing the app to pass back a fully-scored order to the EHR when the interaction is complete.
 
+### CDS Companion App Updates Orders
+
+If a CDS Service wants to launch a companion app for more detailed user interactions, it MAY return an app link card with a `type` of `smart`. This app link card SHALL include an `appContext` that the companion app can use to link the launch back to this specific CDS session, so that the companion app will have any necessary context about the users's current ordering task. (For example, the CDS Service may want to cache information about any draft orders that it learns about from the CDS Hooks invocation, so this information is readily available to the companion app; the cache key can be included in `appContext`.)
+
+When the CDS Client launches the companion app, it SHALL make the `appContext` and its own `smart_messaging_origin` available as launch context parameters, alongside the SMART access token response.
+
+When the companion app runs, the CDS Client SHOULD enable access to the following SMART Web Messaging message types:
+
+* `scratchpad.update`
+* `scratchpad.create`
+* `scratchpad.delete`
+* `ui.done`
+
+The `scratchpad.*` messages can be used with resource-type payloads [as described in the SMART Web Messaging specification](https://github.com/smart-on-fhir/smart-web-messaging/blob/master/README.md#messagetype--scratchpad-fhir-api-interactions) to create, update, or remove draft orders from the CDS Client's UI state.
+
+The `ui.done` message can be used [as described in the SMART Web Messaging specification](https://github.com/smart-on-fhir/smart-web-messaging/blob/master/README.md#messagetype--ui-influence-ehr-ui) to close the app and return control back to the CDS Client, retaining the context from which the app was launched. 
 
 ## End to end example CDS Scenario: (working on it!)
 ### CDS Client
