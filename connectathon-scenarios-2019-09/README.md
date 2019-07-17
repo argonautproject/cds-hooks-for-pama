@@ -26,7 +26,7 @@ entry screen provides a way to easily enter any of the following three orders:
 |`ServiceRequest.code`|`ServiceRequest.reasonCode`|Expected PAMA rating|
 |---|---|---|
 |CPT 72133 (Lumbar spine CT...)|SNOMED 279039007 (Low back pain)|`not-appropriate`|
-|CPT 74183 (Abdomianl MRI...)|SNOMED 197456007 (Acute pancreatitis) &&  741000119101 (Chronic kidney disease ...) |`appropriate`|
+|CPT 74183 (Abdominal MRI...)|SNOMED 197456007 (Acute pancreatitis) &&  741000119101 (Chronic kidney disease ...) |`appropriate`|
 |CPT 71275 (CT angiogram of chest...)|SNOMED 267036007 (Dyspnea) |No rating (insufficient information)|
 
 (TODO: add an example where `no-criteria-apply`.)
