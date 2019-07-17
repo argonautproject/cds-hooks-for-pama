@@ -27,7 +27,7 @@ entry screen provides a way to easily enter any of the following three orders:
 |---|---|---|
 |CPT 72133 (Lumbar spine CT...)|SNOMED 279039007 (Low back pain)|`not-appropriate`|
 |CPT 75561 (Cardiac MRI...)|SNOMED 13213009 (Congenital heart disease)|`appropriate`|
-|CPT 75561 (Cardiac MRI...)|(omitted)|No rating (insufficient information)|
+|CPT 72128 (CT thoracic spine...)|(omitted)|No rating (insufficient information)|
 
 (TODO: add an example where `no-criteria-apply`.)
 
