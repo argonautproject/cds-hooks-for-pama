@@ -13,7 +13,7 @@
       "entry": [{
         "resource": {
           "resourceType": "ServiceRequest",
-          "id": "Example-MRI-Request",
+          "id": "example-MRI-59879846",
           "status": "draft",
           "intent": "plan",
           "code": {
