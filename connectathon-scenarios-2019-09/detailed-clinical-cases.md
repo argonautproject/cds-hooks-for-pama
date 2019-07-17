@@ -358,44 +358,6 @@ deficit. Initial imaging.)*
 
 
 
-<table>
-  <tr>
-   <td>A Suggested Procedure as per ACR Appropriateness Criteria
-   </td>
-   <td>CPT Code
-   </td>
-  </tr>
-  <tr>
-   <td>Magnetic resonance (eg, proton) imaging, spinal canal and contents, thoracic; without contrast material
-   </td>
-   <td>72146
-   </td>
-  </tr>
-</table>
-
-
-
-<table>
-  <tr>
-   <td colspan="2" ><b>Suggested Procedure as per ACR Appropriateness Criteria (pama-rating)</b>
-   </td>
-  </tr>
-  <tr>
-   <td>Numerical Value
-   </td>
-   <td>Text Rating
-   </td>
-  </tr>
-  <tr>
-   <td>—
-   </td>
-   <td>“Usually appropriate” (https://acsearch.acr.org/docs/3101564/Narrative/)
-   </td>
-  </tr>
-</table>
-
-
-
 
 ## Open-ended Simulation Scenarios
 
