@@ -19,8 +19,7 @@ A PAMA Request uses the [`order-select`](https://cds-hooks.org/hooks/order-selec
 
 The request context **SHALL** include:
 
-- The `draftOrders` field with a FHIR R4 bundle of [ServiceRequest](http://hl7.org/fhir/servicerequest.html) resources (and any supporting resources)
-- TODO: other requirements on the supplies ServiceRequest (e.g., codes)
+- The `draftOrders` field with a FHIR R4 bundle of [ServiceRequest](http://hl7.org/fhir/servicerequest.html) resources (and any other unsigned orders from this session) following the ServiceRequest profile below.
 
 ### DRAFT of ServiceRequest Profile
 - status - FHIR value set [RequestStatus](http://build.fhir.org/valueset-request-status.html)
