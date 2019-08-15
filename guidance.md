@@ -92,6 +92,7 @@ Example request:
 
 ```
 {
+    "hook": "order-select",
     "hookInstance": "d1577c69-dfbe-44ad-ba6d-3e05e953b2ea",
     "fhirServer": "http://hooks.smarthealthit.org:9080",
     "context": {
@@ -106,7 +107,7 @@ Example request:
             "entry": [{
                 "resource": {
                     "resourceType": "ServiceRequest",
-                    "id": "Example-MRI-Request",
+                    "id": "example-MRI-59879846",
                     "status": "draft",
                     "intent": "plan",
                     "code": {
@@ -147,7 +148,7 @@ Example response when AUC "Not Applicable":
             "type": "update",
             "resource": {
                 "resourceType": "ServiceRequest",
-                "id": "Example-MRI-Request",
+                "id": "example-MRI-59879846",
                 "extension": [{
                         "url": "http://fhir.org/argonaut/Extension/pama-rating",
                         "valueCodeableConcept": {
@@ -197,7 +198,7 @@ Example response when criteria do apply:
             "type": "update",
             "resource": {
                 "resourceType": "ServiceRequest",
-                "id": "Example-MRI-Request",
+                "id": "example-MRI-59879846",
                 "extension": [{
                         "url": "http://fhir.org/argonaut/Extension/pama-rating",
                         "valueCodeableConcept": {

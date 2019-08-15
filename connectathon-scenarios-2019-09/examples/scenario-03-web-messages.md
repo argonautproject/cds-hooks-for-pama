@@ -16,7 +16,7 @@ targetWindow.postMessage({
     "payload": {
         "resource": {
             "resourceType": "ServiceRequest",
-            "id": "Example-MRI-Request",
+            "id": "example-MRI-59879846",
             "extension": [{
               "url": "http://fhir.org/argonaut/Extension/pama-rating",
               "valueCodeableConcept": {
