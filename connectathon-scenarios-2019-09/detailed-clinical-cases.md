@@ -538,3 +538,210 @@ For these scenarios, a CDS Service should be able to recognize any of the codes 
   </tr>
 </table>
 
+
+### Example leading to "not appropriate" rating
+(Variant 4: New headache. Classic migraine or tension-type primary headache. Normal neurologic examination. Initial imaging. Followed by Variant 6: Chronic headache. No new features. No neurologic deficit. Initial imaging(https://acsearch.acr.org/docs/69482/Narrative/))
+
+
+46 year old male, Ralph Relative, MRI# 4857603, was seen at Good Health Clinic by Dr. Peter Primary, NPI# 2232511193 on 2019 August 15th, complaining of a headache on both sides of his head that would get worse with activity and light exposure and loud noise – he has been feeling especially irritable at both work and home and in fact has taken several days off. It tends to get better after a few days but only if he rests in a dark room and takes “lots” of ibuprofen and acetaminophen. He is concerned about his work and that livelihood begin affected. Dr Primary performed a neurological exam and found the exam to be WNL. Dr Primary orders MRI of brain including brain stem, without contrast and selects Migraine without aura, not intractable, without status migrainosus.  (See codes below)
+
+
+<table>
+  <tr>
+   <td>Advanced Imaging Procedure (ordered)
+   </td>
+   <td>CPT Code
+   </td>
+  </tr>
+  <tr>
+   <td>Magnetic resonance (eg, proton) imaging, brain (including brain stem); without contrast material(s)
+   </td>
+   <td>70551
+   </td>
+  </tr>
+</table>
+
+
+<table>
+  <tr>
+   <td>Set of CMS Valid Advanced Imaging CPT Codes for similar MRIs
+   </td>
+   <td>CPT Code
+   </td>
+  </tr>
+  <tr>
+   <td>Magnetic resonance (eg, proton) imaging, brain (including brain stem); without contrast material(s)
+   </td>
+   <td>70551
+   </td>
+  </tr>
+  <tr>
+   <td>Magnetic resonance (eg, proton) imaging, brain (including brain stem); with contrast material(s)
+   </td>
+   <td>70552
+   </td>
+  </tr>
+  <tr>
+   <td>Magnetic resonance (eg, proton) imaging, brain (including brain stem); without contrast material, followed by contrast material(s) and further sequences
+   </td>
+   <td>70553
+   </td>
+  </tr>
+</table>
+
+
+
+<table>
+  <tr>
+   <td colspan="3" ><b>Indication #1 (reasonCode) </b>
+   </td>
+  </tr>
+  <tr>
+   <td>User Selected (IMO)
+   </td>
+   <td>ICD10
+   </td>
+   <td>SNOMED CT 
+   </td>
+  </tr>
+  <tr>
+   <td>1680416
+   </td>
+   <td>G43.009
+   </td>
+   <td>425007008
+   </td>
+  </tr>
+  <tr>
+   <td>Migraine without aura, not intractable, without status migrainosus
+   </td>
+   <td>Migraine without aura, not intractable, without status migrainosus
+   </td>
+   <td>Migraine without aura, not refractory
+   </td>
+  </tr>
+</table>
+
+
+
+<table>
+  <tr>
+   <td>Migraine headache – IMO Lexicals, SNOMED CT, ICD-10
+   </td>
+  </tr>
+  <tr>
+   <td>
+      <a href="insert URL Here">See full Migraine without aura valueset</a>
+   </td>
+  </tr>
+</table>
+
+
+
+<table>
+  <tr>
+   <td colspan="2" ><b>ACR Appropriateness Criteria (pama-rating)</b>
+   </td>
+  </tr>
+  <tr>
+   <td>Numerical Value
+   </td>
+   <td>Text Rating
+   </td>
+  </tr>
+  <tr>
+   <td>
+   </td>
+   <td>Usually Appropriate (https://acsearch.acr.org/docs/69482/Narrative/)
+       AIM Inform: Does not adhere
+   </td>
+  </tr>
+  
+  
+  
+  ### Example leading to "unknown" (need more information) rating
+  
+  
+  78 year old male, Dick Dyspnea, MRI-132457469, is seen at his primary care office by provider Dr. DoGood, NPI#9786754311 on 06/22/2019 complaining of new and significant shortness of breath that began a few days earlier. Dick is healthy, with only a prior history of dyslipidemia.  He is a non-smoker, and quite active for his age.  His pulse oximetry and vital signs are normal, but there is slight swelling of his left lower leg.  His PCP is concerned about pulmonary embolism and orders a Computed tomography angiography, chest (noncoronary), with contrast material(s), including noncontrast images, if performed, and image postprocessing and selects Shortness of breath for the indication. (see codes below)
+  
+  
+  <table>
+  <tr>
+   <td><b>Advanced Imaging Procedure</b>
+   </td>
+   <td>CPT Code
+   </td>
+  </tr>
+  <tr>
+   <td>Computed tomography angiography, chest (noncoronary), with contrast material(s), including noncontrast images, if performed, and image postprocessing
+     (Note: only 1 CPT code qualified / aligned with the procedure in the scenario)
+   </td>
+   <td>71275
+   </td>
+  </tr>
+  </table>
+  
+  
+  <table>
+  <tr>
+   <td colspan="3" ><b>Indication (reasonCode)</b>
+   </td>
+  </tr>
+  <tr>
+   <td>User Selected (IMO)
+   </td>
+   <td>ICD10
+   </td>
+   <td>SNOMED CT 
+   </td>
+  </tr>
+  <tr>
+   <td>27423
+   </td>
+   <td>R06.02
+   </td>
+   <td>267036007
+   </td>
+  </tr>
+  <tr>
+   <td>Shortness of breath
+   </td>
+   <td>Shortness of breath
+   </td>
+   <td>Dyspnea
+   </td>
+  </tr>
+</table>
+
+
+<table>
+  <tr>
+   <td>Acute Pancreatitis – IMO Lexicals, SNOMED CT, ICD-10
+   </td>
+  </tr>
+  <tr>
+   <td>
+      <a href="insert spreadsheet here">See full Shortness of breath - Dyspnea valueset</a>
+   </td>
+  </tr>
+</table>
+
+
+<table>
+  <tr>
+   <td colspan="2" ><b>ACR Appropriateness Criteria (pama-rating)</b>
+   </td>
+  </tr>
+  <tr>
+   <td>Numerical Value
+   </td>
+   <td>Text Rating
+   </td>
+  </tr>
+  <tr>
+   <td>
+   </td>
+   <td>In this scenario, additional clinical information is needed:  d-dimer results if performed (https://acsearch.acr.org/docs/69404/Narrative/)
+   </td>
+  </tr>
+</table>
