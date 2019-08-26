@@ -11,31 +11,39 @@
     ],
     "draftOrders": {
       "resourceType": "Bundle",
-      "entry": [{
-        "resource": {
-          "resourceType": "ServiceRequest",
-          "id": "example-MRI-59879846",
-          "status": "draft",
-          "intent": "plan",
-          "code": {
-            "coding": [{
-              "system": "http://www.ama-assn.org/go/cpt",
-              "code": "72133"
-            }],
-            "text": "Lumbar spine CT"
-          },
-          "subject": {
-            "reference": "Patient/MRI-59879846"
-          },
-          "reasonCode": [{
-            "coding": [{
-              "system": "http://snomed.info/sct",
-              "code": "279039007",
-              "display": "Low back pain"
-            }]
-          }]
+      "entry": [
+        {
+          "resource": {
+            "resourceType": "ServiceRequest",
+            "id": "example-MRI-59879846",
+            "status": "draft",
+            "intent": "plan",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://www.ama-assn.org/go/cpt",
+                  "code": "72133"
+                }
+              ],
+              "text": "Lumbar spine CT"
+            },
+            "subject": {
+              "reference": "Patient/MRI-59879846"
+            },
+            "reasonCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://snomed.info/sct",
+                    "code": "279039007",
+                    "display": "Low back pain"
+                  }
+                ]
+              }
+            ]
+          }
         }
-      }]
+      ]
     }
   }
 }

@@ -1,57 +1,72 @@
 {
-  "cards": [ {
-    "summary": "ACC recommends cardiac MRI",
-    "indicator": "info",
-    "source": {
-      "label": "Dx App Suite"
-    },
-    "suggestions": [{
-      "label": "Choose MRI",
-      "actions": [{
-        "type": "update",
-        "description": "Update order to MRI",
-        "resource": {
-          "resourceType": "ServiceRequest",
-          "id": "example-MRI-59879846",
-          "extension": [{
-            "url": "http://fhir.org/argonaut/Extension/pama-rating",
-            "valueCodeableConcept": {
-              "coding": [{
-                "system": "http://fhir.org/argonaut/CodeSystem/pama-rating",
-                "code": "appropriate"
-              }]
+  "cards": [
+    {
+      "summary": "ACC recommends cardiac MRI",
+      "indicator": "info",
+      "source": {
+        "label": "Dx App Suite"
+      },
+      "suggestions": [
+        {
+          "label": "Choose MRI",
+          "actions": [
+            {
+              "type": "update",
+              "description": "Update order to MRI",
+              "resource": {
+                "resourceType": "ServiceRequest",
+                "id": "example-MRI-59879846",
+                "extension": [
+                  {
+                    "url": "http://fhir.org/argonaut/Extension/pama-rating",
+                    "valueCodeableConcept": {
+                      "coding": [
+                        {
+                          "system": "http://fhir.org/argonaut/CodeSystem/pama-rating",
+                          "code": "appropriate"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "url": "http://fhir.org/argonaut/Extension/pama-rating-qcdsm-consulted",
+                    "valueString": "example-gcode"
+                  },
+                  {
+                    "url": "http://fhir.org/argonaut/Extension/pama-rating-consult-id",
+                    "valueUri": "urn:uuid:55f3b7fc-9955-420e-a460-ff284b2956e6"
+                  }
+                ],
+                "status": "draft",
+                "intent": "plan",
+                "code": {
+                  "coding": [
+                    {
+                      "system": "http://www.ama-assn.org/go/cpt",
+                      "code": "75561"
+                    }
+                  ],
+                  "text": "Cardiac MRI"
+                },
+                "subject": {
+                  "reference": "Patient/MRI-59879846"
+                },
+                "reasonCode": [
+                  {
+                    "coding": [
+                      {
+                        "system": "http://snomed.info/sct",
+                        "code": "13213009",
+                        "display": "Congenital heart disease"
+                      }
+                    ]
+                  }
+                ]
+              }
             }
-          },
-          {
-            "url": "http://fhir.org/argonaut/Extension/pama-rating-qcdsm-consulted",
-            "valueString": "example-gcode"
-          },
-          {
-            "url": "http://fhir.org/argonaut/Extension/pama-rating-consult-id",
-            "valueUri": "urn:uuid:55f3b7fc-9955-420e-a460-ff284b2956e6"
-          }],
-          "status": "draft",
-          "intent": "plan",
-          "code": {
-            "coding": [{
-              "system": "http://www.ama-assn.org/go/cpt",
-              "code": "75561"
-            }],
-            "text": "Cardiac MRI"
-          },
-          "subject": {
-            "reference": "Patient/MRI-59879846"
-          },
-          "reasonCode": [{
-            "coding": [{
-              "system": "http://snomed.info/sct",
-              "code": "13213009",
-              "display": "Congenital heart disease"
-            }]
-          }]
+          ]
         }
-      }]
-    }]
-  }]
+      ]
+    }
+  ]
 }
-
