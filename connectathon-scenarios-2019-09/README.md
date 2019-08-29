@@ -25,13 +25,12 @@ entry screen provides a way to easily enter any of the following three orders:
 
 |`ServiceRequest.code`|`ServiceRequest.reasonCode`|Expected PAMA rating|
 |---|---|---|
-|CPT 72133 (Lumbar spine CT...)|SNOMED 279039007 (Low back pain)|`not-appropriate`|
-|CPT 74183 (Abdominal MRI...)|SNOMED 197456007 (Acute pancreatitis) &&  741000119101 (Chronic kidney disease ...) |`appropriate`|
-|CPT 71275 (CT angiogram of chest...)|SNOMED 267036007 (Dyspnea) |No rating (insufficient information)|
+|CPT 72133 (CT lumbar spine...)|SNOMED 279039007 (Low back pain)|`not-appropriate`|
+|CPT 70450 (CT head without contrast...)|SNOMED 25064002 (Headache) && 423341008 (Optic disc edema) |`appropriate`|
+|CPT 70544 (MRA head...)|SNOMED 27355003 (Toothache) |`no-guidelines-apply`|
+|CPT 71275 (CT angiogram of chest with contrast...)|SNOMED 267036007 (Dyspnea) |No rating (insufficient information)|
 
-(TODO: add an example where `no-criteria-apply`.)
-
-We recommend that all participants review these [Scenarios for PAMA Connectathon Testing](detailed-clinical-cases.md) for additional details.
+We recommend that participants review these [Scenarios for PAMA Connectathon Testing](detailed-clinical-cases.md) for additional details.
 
 * CDS Service returns a response with a `.extension.systemActions` array that
 includes an `update` action with an automated PAMA rating for the
