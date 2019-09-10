@@ -75,7 +75,7 @@ a `ServiceRequest` with a `code` and a `reasonCode`.
 [See example request](./examples/scenario-02-outbound-request.json).
 
 * CDS Service returns a SMART App Link card including `appContext` to launch
-its CDS companion app. [See example request](./examples/scenario-03-app-launch-response.json).
+its CDS companion app. [See example response](./examples/scenario-03-app-launch-response.json).
 
 * When a user follows the link, EHR launches the CDS companion app, including
 launch context parameters for `patient`, `smart_messaging_origin`, and
