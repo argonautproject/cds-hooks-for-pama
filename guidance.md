@@ -40,7 +40,7 @@ The CDS Service produces a PAMA Response for each PAMA-relevant ServiceRequest b
 
 1. Creating an `systemActions` list as a root-level extension (see extension details below).
 2. Optionally creating a set of proposed alternative orders, as _suggestion_ cards.
-3. Optionally creating a set of _app link_ cards to launch external apps to capture additional data (e.g. prior diagnostic work completed, previous procedures performed, information from review of systems) or to provide advice.
+3. Optionally creating a set of _app link_ cards to launch external apps to capture additional data (e.g. prior diagnostic work completed, previous procedures performed, information from review of systems) or to provide advice. 
 
 Argonaut CDS Hooks extension for PAMA, to be used at the top level of a CDS Hooks Response:
 
@@ -73,6 +73,8 @@ A CDS client, or EHR, **SHOULD** support the following behaviors to process a PA
 
 If a CDS Service wants to launch a companion app for more detailed user interactions, it MAY return an app link card with a `type` of `smart`. This app link card SHALL include an `appContext` that the companion app can use to link the launch back to this specific CDS session, so that the companion app will have any necessary context about the users's current ordering task. (For example, the CDS Service may want to cache information about any draft orders that it learns about from the CDS Hooks invocation, so this information is readily available to the companion app; the cache key can be included in `appContext`.)
 
+**Implementation note:** _app link_ values contains an `appContext` property that conveys relevant context; CDS Service developers are encouraged to use opaque handles into context stored server-side, or otherwise to make `appContext` values tamper-proof, rather than directly embedding data in the `appContext`.
+
 When the CDS Client launches the companion app, it SHALL make the `appContext` and its own `smart_messaging_origin` available as launch context parameters, alongside the SMART access token response.
 
 When the companion app runs, the CDS Client SHOULD enable access to the following SMART Web Messaging message types:
@@ -84,7 +86,12 @@ When the companion app runs, the CDS Client SHOULD enable access to the followin
 
 The `scratchpad.*` messages can be used with resource-type payloads [as described in the SMART Web Messaging specification](https://github.com/smart-on-fhir/smart-web-messaging/blob/master/README.md#messagetype--scratchpad-fhir-api-interactions) to create, update, or remove draft orders from the CDS Client's UI state.
 
-The `ui.done` message can be used [as described in the SMART Web Messaging specification](https://github.com/smart-on-fhir/smart-web-messaging/blob/master/README.md#messagetype--ui-influence-ehr-ui) to close the app and return control back to the CDS Client, retaining the context from which the app was launched. 
+The `ui.done` message can be used [as described in the SMART Web Messaging specification](https://github.com/smart-on-fhir/smart-web-messaging/blob/master/README.md#messagetype--ui-influence-ehr-ui) to close the app and return control back to the CDS Client, retaining the context from which the app was launched.
+
+**Implementation note:** After a companion app returns control to the EHR via `ui.done`, the EHR will typically re-invoke the CDS Service with updated orders (i.e., based on the `scratchpad.*` messages sent by the app). The CDS Service can correlate this re-invocation with the previous app invocation by using a combination or `ServiceRequest.id` values and `pama-rating-consult-id` extension values -- so any information collected from the clinician during app interactions can be applied in responding to re-invocation. For example, if a clinician answered a question in-app like "Are any of the following red-flag symptoms present?", then the answers to that question can be re-applied to any follow-up queries that result after the app has called `ui.done`.
+
+_app link_ values contains an `appContext` property that conveys relevant context; CDS Service developers are encouraged to use opaque handles into context stored server-side, or otherwise to make `appContext` values tamper-proof, rather than directly embedding data in the `appContext`.
+
 
 ## End to end example CDS Scenario: (working on it!)
 ### CDS Client
