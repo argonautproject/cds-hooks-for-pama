@@ -90,9 +90,6 @@ The `ui.done` message can be used [as described in the SMART Web Messaging speci
 
 **Implementation note:** After a companion app returns control to the EHR via `ui.done`, the EHR will typically re-invoke the CDS Service with updated orders (i.e., based on the `scratchpad.*` messages sent by the app). The CDS Service can correlate this re-invocation with the previous app invocation by using a combination or `ServiceRequest.id` values and `pama-rating-consult-id` extension values -- so any information collected from the clinician during app interactions can be applied in responding to re-invocation. For example, if a clinician answered a question in-app like "Are any of the following red-flag symptoms present?", then the answers to that question can be re-applied to any follow-up queries that result after the app has called `ui.done`.
 
-_app link_ values contains an `appContext` property that conveys relevant context; CDS Service developers are encouraged to use opaque handles into context stored server-side, or otherwise to make `appContext` values tamper-proof, rather than directly embedding data in the `appContext`.
-
-
 ## End to end example CDS Scenario: (working on it!)
 ### CDS Client
 Example request:
