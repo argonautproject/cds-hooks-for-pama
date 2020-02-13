@@ -12,7 +12,7 @@ extra:
       link: 'https://github.com/argonautproject/cds-hooks-for-pama'
 
 nav:
-  - Guidance: 'guidance.md'
+  - Guidance: 'index.md'
 
 repo_url: 'https://github.com/argonautproject/cds-hooks-for-pama'
 
