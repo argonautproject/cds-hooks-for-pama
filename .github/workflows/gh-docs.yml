@@ -1,5 +1,3 @@
-# Taken from: https://github.com/marketplace/actions/github-pages-action#%EF%B8%8F-static-site-generators-with-python
-
 name: github pages
 
 on:
