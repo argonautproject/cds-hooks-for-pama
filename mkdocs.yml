@@ -1,4 +1,5 @@
 site_name: CDS Hooks For PAMA
+site_url: https://argonautproject.github.io/cds-hooks-for-pama/
 
 theme:
   name: 'material'
@@ -11,7 +12,7 @@ extra:
       link: 'https://github.com/argonautproject/cds-hooks-for-pama'
 
 nav:
-- Guidance: 'guidance.md'
+  - Guidance: 'guidance.md'
 
 repo_url: 'https://github.com/argonautproject/cds-hooks-for-pama'
 
