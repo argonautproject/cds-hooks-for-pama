@@ -6,6 +6,8 @@
 
 This repository supports development of specific guidance for the requirements of [Potecting Access to Medicare Act (PAMA)](https://www.cms.gov/medicare/quality-initiatives-patient-assessment-instruments/appropriate-use-criteria-program/index.html) for ordering advanced imaging services. The guidance relies on [CDS Hooks](https://cds-hooks.org/), which is a vendor agnostic remote decision support standard. 
 
+Draft guide: https://argonautproject.github.io/cds-hooks-for-pama/
+
 ## Contributing
 
 We encourage and welcome any contributions to the CDS Hooks PAMA guide.
